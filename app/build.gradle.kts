@@ -15,6 +15,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_URL", "\"https://story-api.dicoding.dev/v1\"")
     }
 
     buildTypes {
@@ -38,6 +40,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -70,6 +73,7 @@ dependencies {
 
     // OkHttp for HTTP client
     implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
     // Gson for JSON parsing
     implementation(libs.gson)
