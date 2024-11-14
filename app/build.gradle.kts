@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.storyapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.storyapp"
@@ -36,19 +36,51 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
 
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.annotation)
+    testImplementation(libs.junit)
+
+    // Android Jetpack components
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.recyclerview)
+
+
+    // Retrofit for API calls
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    // OkHttp for HTTP client
+    implementation(libs.okhttp)
+
+    // Gson for JSON parsing
+    implementation(libs.gson)
+
+    // Glide for image loading
+    implementation(libs.glide)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+    // CameraX
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
 }
