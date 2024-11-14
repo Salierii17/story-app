@@ -97,4 +97,8 @@ class MyEditText @JvmOverloads constructor(
         }
         return false
     }
+
+    override fun getText(): Editable? {
+        return super.getText()
+    }
 }

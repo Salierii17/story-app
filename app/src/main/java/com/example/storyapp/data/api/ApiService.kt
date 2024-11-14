@@ -1,6 +1,6 @@
-package com.example.storyapp.data.remote
+package com.example.storyapp.data.api
 
-import com.example.storyapp.data.remote.RegisterResponse
+import com.example.storyapp.data.model.RegisterResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST

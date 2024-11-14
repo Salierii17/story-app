@@ -1,11 +1,10 @@
-package com.example.storyapp.data.remote
+package com.example.storyapp.data.api
 
 import com.example.storyapp.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 class ApiConfig {
 
@@ -17,9 +16,6 @@ class ApiConfig {
             )
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .writeTimeout(60, TimeUnit.SECONDS)
                 .build()
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
