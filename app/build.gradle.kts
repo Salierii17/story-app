@@ -47,6 +47,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.annotation)
     testImplementation(libs.junit)
+    implementation(libs.androidx.fragment.ktx)
+
 
     // Android Jetpack components
     implementation(libs.androidx.core.ktx)
