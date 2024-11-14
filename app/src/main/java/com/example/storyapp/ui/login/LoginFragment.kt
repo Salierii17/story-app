@@ -43,8 +43,8 @@ private var _binding: FragmentLoginBinding? = null
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
-        val usernameEditText = binding.username
-        val passwordEditText = binding.password
+        val usernameEditText = binding.edLoginEmail
+        val passwordEditText = binding.edLoginPassword
         val loginButton = binding.login
         val loadingProgressBar = binding.loading
 
