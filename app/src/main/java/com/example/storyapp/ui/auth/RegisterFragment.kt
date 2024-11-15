@@ -6,13 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.databinding.FragmentRegisterBinding
+import com.example.storyapp.utils.Result
 
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding
+
+    private lateinit var authViewModel: AuthViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,27 +31,41 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val factory = ViewModelFactory.getInstance(requireActivity())
-        val authViewModel: AuthViewModel by viewModels {
-            factory
-        }
-
-        authViewModel.registerResponse.observe(viewLifecycleOwner) { response ->
-            if (response.error) {
-                showToast("Error: ${response.message}")
-            } else {
-                showToast("Success: ${response.message}")
-            }
-        }
+        authViewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
 
         binding?.signupButton?.setOnClickListener {
             val name = binding?.edRegisterName?.text.toString()
             val email = binding?.edRegisterEmail?.text.toString()
             val password = binding?.edRegisterPassword?.text.toString()
 
-            authViewModel.registerUser(name, email, password)
+            addUser(name, email, password)
         }
 
 
+    }
+
+    private fun addUser(name: String, email: String, password: String) {
+        authViewModel.registerUser(name, email, password).observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Loading -> {
+                        binding?.progressBar?.visibility = View.VISIBLE
+                    }
+
+                    is Result.Success -> {
+                        binding?.progressBar?.visibility = View.GONE
+                        val message = result.data.message
+                        showToast("Success: $message")
+
+                    }
+
+                    is Result.Error -> {
+                        binding?.progressBar?.visibility = View.GONE
+                        showToast("Error: ${result.error}")
+                    }
+                }
+            }
+        }
     }
 
     private fun showToast(message: String) {

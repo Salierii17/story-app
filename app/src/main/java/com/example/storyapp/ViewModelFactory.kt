@@ -9,8 +9,7 @@ import com.example.storyapp.ui.auth.AuthViewModel
 
 class ViewModelFactory private constructor(
     private val authRepository: AuthRepository,
-) :
-    ViewModelProvider.NewInstanceFactory() {
+) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
             return AuthViewModel(authRepository) as T
@@ -18,7 +17,9 @@ class ViewModelFactory private constructor(
 //        else if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
 //            return SettingsViewModel(pref) as T
 //        }
-        throw IllegalArgumentException("Unknown ViewModel Class: ${modelClass.name}")
+        else {
+            throw IllegalArgumentException("Unknown ViewModel Class: ${modelClass.name}")
+        }
     }
 
     companion object {
