@@ -9,7 +9,7 @@
         android:id="@+id/navigation_welcome"
         android:name="com.example.storyapp.ui.auth.WelcomeFragment"
         android:label="@string/title_welcome"
-        tools:layout="@layout/fragment_welcome" >
+        tools:layout="@layout/fragment_welcome">
         <action
             android:id="@+id/action_navigation_welcome_to_navigation_registration"
             app:destination="@id/navigation_registration" />
@@ -24,7 +24,7 @@
         tools:layout="@layout/fragment_register" />
     <fragment
         android:id="@+id/navigation_login"
-        android:name="com.example.storyapp.ui.login.LoginFragment"
+        android:name="com.example.storyapp.ui.auth.LoginFragment"
         android:label="@string/title_login"
         tools:layout="@layout/fragment_login" />
 </navigation>

@@ -70,7 +70,7 @@
 
 
     <Button
-        android:id="@+id/login"
+        android:id="@+id/btn_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -93,4 +93,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

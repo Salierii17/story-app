@@ -1,17 +1,41 @@
 package com.example.storyapp.ui.auth
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.storyapp.data.model.RegisterResponse
+import androidx.lifecycle.viewModelScope
+import com.example.storyapp.data.LoginDataSource
+import com.example.storyapp.data.model.LoggedInUser
 import com.example.storyapp.data.repository.AuthRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
-class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
+class AuthViewModel(
+    private val authRepository: AuthRepository,
+    private val loginDataSource: LoginDataSource
+) : ViewModel() {
 
-    private val _registerResponse = MutableLiveData<Result<RegisterResponse>>()
-    val registerResponse: LiveData<Result<RegisterResponse>> get() = _registerResponse
+    fun register(name: String, email: String, password: String) =
+        authRepository.register(name, email, password)
 
-    fun registerUser(name: String, email: String, password: String) =
-        authRepository.registerUser(name, email, password)
+    fun login(email: String, password: String) = authRepository.login(email, password)
+
+//    fun login(email: String, password: String) {
+//        viewModelScope.launch {
+//            _loginState.value = authRepository.login(email, password)
+//        }
+//    }
+
+    fun getLoggedInUser(): Flow<LoggedInUser?> {
+        return authRepository.getLoggedInUser()
+    }
+
+    suspend fun saveUser(loggedInUser: LoggedInUser) {
+        loginDataSource.saveUser(loggedInUser)
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            authRepository.logout()
+        }
+    }
 
 }
