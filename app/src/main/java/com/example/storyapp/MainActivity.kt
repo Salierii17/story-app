@@ -1,17 +1,23 @@
 package com.example.storyapp
 
+import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.databinding.ActivityMainBinding
+import com.example.storyapp.ui.auth.AuthActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var loginDataSource: LoginDataSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,9 +25,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        loginDataSource = LoginDataSource(this)
+
+        lifecycleScope.launch {
+            val isLoggedIn = loginDataSource.isLoggedIn()
+            if (!isLoggedIn) {
+                val intent = Intent(this@MainActivity, AuthActivity::class.java)
+                startActivity(intent)
+                finish()
+                return@launch
+            }
+            setupUI()
+        }
+    }
+
+    private fun setupUI() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(

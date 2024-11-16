@@ -1,13 +1,16 @@
 package com.example.storyapp.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.databinding.FragmentHomeBinding
+import com.example.storyapp.ui.auth.AuthActivity
+import com.example.storyapp.ui.auth.AuthViewModel
 
 class HomeFragment : Fragment() {
 
@@ -17,22 +20,34 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private lateinit var authViewModel: AuthViewModel
+
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val factory = ViewModelFactory.getInstance(requireActivity())
+        authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnLogout.setOnClickListener {
+            logout()
         }
-        return root
+    }
+
+    private fun logout() {
+        authViewModel.logout()
+
+        val intent = Intent(requireContext(), AuthActivity::class.java)
+        startActivity(intent)
+        requireActivity().finishAffinity()
     }
 
     override fun onDestroyView() {

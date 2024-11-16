@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.storyapp.data.model.LoggedInUser
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 
@@ -14,7 +15,6 @@ class LoginDataSource(private val context: Context) {
 
     private val dataStore = context.dataStore
 
-    // Save user data (e.g., token)
     suspend fun saveUser(loggedInUser: LoggedInUser) {
         dataStore.edit { preferences ->
             preferences[USER_ID_KEY] = loggedInUser.userId
@@ -34,8 +34,13 @@ class LoginDataSource(private val context: Context) {
         }
     }
 
+    suspend fun isLoggedIn(): Boolean {
+        val userPreferences = dataStore.data.firstOrNull()
+        return userPreferences?.get(USER_TOKEN_KEY) != null
+    }
+
     suspend fun logout() {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences.clear()
         }
     }
@@ -45,16 +50,5 @@ class LoginDataSource(private val context: Context) {
         private val USER_NAME_KEY = stringPreferencesKey("user_name")
         private val USER_TOKEN_KEY = stringPreferencesKey("user_token")
     }
-
-
-//    fun login(email: String, password: String): Result<LoggedInUser> {
-//        try {
-//            // TODO: handle loggedInUser authentication
-//            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), "Jane Doe")
-//            return Result.Success(fakeUser)
-//        } catch (e: Throwable) {
-//            return Result.Error(IOException("Error logging in", e))
-//        }
-//    }
 
 }

@@ -12,4 +12,8 @@ object Injection {
         return AuthRepository.getInstance(apiService, loginDataSource)
     }
 
+    fun provideLoginDataSource(context: Context): LoginDataSource {
+        return LoginDataSource(context)
+    }
+
 }
