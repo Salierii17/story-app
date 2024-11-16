@@ -3,21 +3,32 @@ package com.example.storyapp
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.data.repository.AuthRepository
+import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.di.Injection
 import com.example.storyapp.ui.auth.AuthViewModel
+import com.example.storyapp.ui.home.HomeViewModel
 
 class ViewModelFactory private constructor(
     private val authRepository: AuthRepository,
-    private val loginDataSource: LoginDataSource
+    private val storyRepository: StoryRepository,
 ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
-            return AuthViewModel(authRepository, loginDataSource) as T
-        }
-        else {
-            throw IllegalArgumentException("Unknown ViewModel Class: ${modelClass.name}")
+        return createViewModel(modelClass)
+            ?: throw IllegalArgumentException("Unknown ViewModel Class: ${modelClass.name}")
+    }
+
+    private fun <T : ViewModel> createViewModel(modelClass: Class<T>): T? {
+        return when {
+            modelClass.isAssignableFrom(AuthViewModel::class.java) -> {
+                AuthViewModel(authRepository) as T
+            }
+
+            modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
+                HomeViewModel(storyRepository) as T
+            }
+
+            else -> null
         }
     }
 
@@ -26,8 +37,8 @@ class ViewModelFactory private constructor(
         private var instance: ViewModelFactory? = null
         fun getInstance(context: Context): ViewModelFactory = instance ?: synchronized(this) {
             instance ?: ViewModelFactory(
-                Injection.provideRepository(context),
-                Injection.provideLoginDataSource(context)
+                Injection.provideAuthRepository(context),
+                Injection.provideStoryRepository(context),
             )
         }.also { instance = it }
     }

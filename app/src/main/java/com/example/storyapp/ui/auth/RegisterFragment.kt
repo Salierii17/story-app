@@ -13,7 +13,7 @@ import com.example.storyapp.utils.Result
 
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
 
     private lateinit var authViewModel: AuthViewModel
 
@@ -21,22 +21,22 @@ class RegisterFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val factory = ViewModelFactory.getInstance(requireActivity())
-        authViewModel = ViewModelProvider(this, factory).get(AuthViewModel::class.java)
+        authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
-        binding?.signupButton?.setOnClickListener {
-            val name = binding?.edRegisterName?.text.toString()
-            val email = binding?.edRegisterEmail?.text.toString()
-            val password = binding?.edRegisterPassword?.text.toString()
+        binding.signupButton.setOnClickListener {
+            val name = binding.edRegisterName.text.toString()
+            val email = binding.edRegisterEmail.text.toString()
+            val password = binding.edRegisterPassword.text.toString()
 
             addUser(name, email, password)
         }
@@ -49,18 +49,18 @@ class RegisterFragment : Fragment() {
             if (result != null) {
                 when (result) {
                     is Result.Loading -> {
-                        binding?.loading?.visibility = View.VISIBLE
+                        binding.loading.visibility = View.VISIBLE
                     }
 
                     is Result.Success -> {
-                        binding?.loading?.visibility = View.GONE
+                        binding.loading.visibility = View.GONE
                         val message = result.data
                         showToast("Success: $message")
 
                     }
 
                     is Result.Error -> {
-                        binding?.loading?.visibility = View.GONE
+                        binding.loading.visibility = View.GONE
                         showToast("Error: ${result.error}")
                     }
                 }

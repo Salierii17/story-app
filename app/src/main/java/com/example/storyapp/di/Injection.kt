@@ -3,17 +3,30 @@ package com.example.storyapp.di
 import android.content.Context
 import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.data.api.ApiConfig
+import com.example.storyapp.data.api.ApiService
 import com.example.storyapp.data.repository.AuthRepository
+import com.example.storyapp.data.repository.StoryRepository
 
 object Injection {
-    fun provideRepository(context: Context): AuthRepository {
-        val apiService = ApiConfig.getApiService()
-        val loginDataSource = LoginDataSource(context)
+
+    private fun provideApiService(): ApiService {
+        return ApiConfig.getApiService()
+    }
+
+    private fun provideLoginDataSource(context: Context): LoginDataSource {
+        return LoginDataSource(context)
+    }
+
+    fun provideAuthRepository(context: Context): AuthRepository {
+        val apiService = provideApiService()
+        val loginDataSource = provideLoginDataSource(context)
         return AuthRepository.getInstance(apiService, loginDataSource)
     }
 
-    fun provideLoginDataSource(context: Context): LoginDataSource {
-        return LoginDataSource(context)
+    fun provideStoryRepository(context: Context): StoryRepository {
+        val apiService = provideApiService()
+        return StoryRepository.getInstance(apiService)
     }
+
 
 }

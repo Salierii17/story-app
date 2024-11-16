@@ -32,11 +32,9 @@ class AuthRepository private constructor(
     ): LiveData<Result<String>> = liveData {
         emit(Result.Loading)
         try {
-            //get success message
             val message = apiService.register(name, email, password).message
             emit(Result.Success(message))
         } catch (e: HttpException) {
-            //get error message
             val jsonInString = e.response()?.errorBody()?.string()
             val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
             val errorMessage = errorBody.message ?: e.message.toString()

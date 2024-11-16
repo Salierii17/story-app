@@ -21,6 +21,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var homeViewModel: HomeViewModel
 
 
     override fun onCreateView(
@@ -28,6 +29,7 @@ class HomeFragment : Fragment() {
     ): View {
         val factory = ViewModelFactory.getInstance(requireActivity())
         authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
+        homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
@@ -37,7 +39,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnLogout.setOnClickListener {
+        binding.actionLogout.setOnClickListener {
             logout()
         }
     }

@@ -17,17 +17,17 @@ import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
 
     private lateinit var authViewModel: AuthViewModel
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,9 +36,9 @@ class LoginFragment : Fragment() {
         val factory = ViewModelFactory.getInstance(requireActivity())
         authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
-        binding?.btnLogin?.setOnClickListener {
-            val email = binding?.edLoginEmail?.text.toString()
-            val password = binding?.edLoginPassword?.text.toString()
+        binding.btnLogin.setOnClickListener {
+            val email = binding.edLoginEmail.text.toString()
+            val password = binding.edLoginPassword.text.toString()
 
             login(email, password)
         }
@@ -49,16 +49,16 @@ class LoginFragment : Fragment() {
             if (result != null) {
                 when (result) {
                     is Result.Loading -> {
-                        binding?.loading?.visibility = View.VISIBLE
+                        binding.loading.visibility = View.VISIBLE
                     }
 
                     is Result.Success -> {
-                        binding?.loading?.visibility = View.GONE
+                        binding.loading.visibility = View.GONE
                         val user = result.data
                         showToast("Login Successfully")
 
                         lifecycleScope.launch {
-                            authViewModel.saveUser(result.data)
+                            authViewModel.saveUser(user)
                         }
 
                         // Navigate to MainActivity
@@ -70,7 +70,7 @@ class LoginFragment : Fragment() {
                     }
 
                     is Result.Error -> {
-                        binding?.loading?.visibility = View.GONE
+                        binding.loading.visibility = View.GONE
                         showToast("Error: ${result.error}")
                     }
                 }

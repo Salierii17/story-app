@@ -31,4 +31,6 @@
     <string name="title_welcome">Welcome</string>
     <string name="title_registration">Registration</string>
     <string name="title_login">Login</string>
+    <string name="story_images">Story Images</string>
+    <string name="username">Username</string>
 </resources>

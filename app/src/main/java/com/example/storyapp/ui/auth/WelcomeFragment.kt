@@ -12,23 +12,23 @@ import com.example.storyapp.databinding.FragmentWelcomeBinding
 class WelcomeFragment : Fragment() {
 
     private var _binding: FragmentWelcomeBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentWelcomeBinding.inflate(layoutInflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.signupButton?.setOnClickListener {
+        binding.signupButton.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_welcome_to_navigation_registration)
         }
-        binding?.loginButton?.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_welcome_to_navigation_login)
         }
     }
