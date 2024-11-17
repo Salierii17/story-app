@@ -13,7 +13,7 @@ object Injection {
         return ApiConfig.getApiService()
     }
 
-    private fun provideLoginDataSource(context: Context): LoginDataSource {
+    fun provideLoginDataSource(context: Context): LoginDataSource {
         return LoginDataSource(context)
     }
 

@@ -3,6 +3,7 @@ package com.example.storyapp
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.data.repository.AuthRepository
 import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.di.Injection
@@ -12,6 +13,7 @@ import com.example.storyapp.ui.home.HomeViewModel
 class ViewModelFactory private constructor(
     private val authRepository: AuthRepository,
     private val storyRepository: StoryRepository,
+    private val loginDataSource: LoginDataSource
 ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return createViewModel(modelClass)
@@ -25,7 +27,7 @@ class ViewModelFactory private constructor(
             }
 
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
-                HomeViewModel(storyRepository) as T
+                HomeViewModel(storyRepository,loginDataSource) as T
             }
 
             else -> null
@@ -39,6 +41,7 @@ class ViewModelFactory private constructor(
             instance ?: ViewModelFactory(
                 Injection.provideAuthRepository(context),
                 Injection.provideStoryRepository(context),
+                Injection.provideLoginDataSource(context)
             )
         }.also { instance = it }
     }

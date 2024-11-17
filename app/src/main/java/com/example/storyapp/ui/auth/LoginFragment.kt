@@ -73,6 +73,7 @@ class LoginFragment : Fragment() {
                         binding.loading.visibility = View.GONE
                         showToast("Error: ${result.error}")
                     }
+
                 }
             }
         }
