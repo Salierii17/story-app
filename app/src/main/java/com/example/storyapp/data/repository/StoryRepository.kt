@@ -8,7 +8,12 @@ import com.example.storyapp.data.model.ErrorResponse
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.utils.Result
 import com.google.gson.Gson
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
+import java.io.File
 
 class StoryRepository private constructor(
     private val apiService: ApiService
@@ -40,6 +45,7 @@ class StoryRepository private constructor(
         }
     }
 
+
     fun fetchDetailStory(token: String, id: String): LiveData<Result<ListStoryItem>> = liveData {
         emit(Result.Loading)
         try {
@@ -50,8 +56,28 @@ class StoryRepository private constructor(
             val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
             val errorMessage = errorBody.message ?: e.message.toString()
             emit(Result.Error(errorMessage))
-            Log.e(AuthRepository.TAG, "fetchStory : $errorMessage")
+            Log.e(AuthRepository.TAG, "fetchDetailStory : $errorMessage")
         }
     }
+
+    fun addStory(token: String, imageFile: File, description: String) = liveData {
+        emit(Result.Loading)
+        val requestBody = description.toRequestBody("text/plain".toMediaType())
+        val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+        val multipartBody = MultipartBody.Part.createFormData(
+            "photo", imageFile.name, requestImageFile
+        )
+        try {
+            val message = apiService.addStory("Bearer $token", multipartBody, requestBody)
+            emit(Result.Success(message))
+        } catch (e: HttpException) {
+            val jsonInString = e.response()?.errorBody()?.string()
+            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+            val errorMessage = errorBody.message ?: e.message.toString()
+            emit(Result.Error(errorMessage))
+            Log.e(AuthRepository.TAG, "addStory : $errorMessage")
+        }
+    }
+
 
 }

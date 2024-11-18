@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.data.model.ListStoryItem
+import com.example.storyapp.data.model.StoryResponse
 import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.utils.Result
 import kotlinx.coroutines.launch
+import java.io.File
 
 class StoryViewModel(
     private val repository: StoryRepository, private val dataSource: LoginDataSource
@@ -18,8 +20,11 @@ class StoryViewModel(
     private val _stories = MutableLiveData<Result<List<ListStoryItem>>>()
     val stories: LiveData<Result<List<ListStoryItem>>> get() = _stories
 
+    private val _addStory = MutableLiveData<Result<StoryResponse>>()
+    val addStory: LiveData<Result<StoryResponse>> get() = _addStory
+
     private val _storyDetail = MutableLiveData<Result<ListStoryItem>>()
-    val storyDetail: LiveData<Result    <ListStoryItem>> get() = _storyDetail
+    val storyDetail: LiveData<Result<ListStoryItem>> get() = _storyDetail
 
     fun fetchStory() {
         viewModelScope.launch {
@@ -28,6 +33,19 @@ class StoryViewModel(
                     repository.fetchStory(user.token).observeForever { result ->
                         _stories.postValue(result)
                     }
+                } ?: run { _stories.postValue(Result.Error("User not logged in")) }
+            }
+        }
+    }
+
+    fun addStory(file: File, description: String) {
+        viewModelScope.launch {
+            dataSource.user.collect { loggedInUser ->
+                loggedInUser?.let { user ->
+                    repository.addStory(user.token, file, description)
+                        .observeForever { result ->
+                            _addStory.postValue(result)
+                        }
                 } ?: run { _stories.postValue(Result.Error("User not logged in")) }
             }
         }
@@ -44,10 +62,4 @@ class StoryViewModel(
             }
         }
     }
-
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-    val text: LiveData<String> = _text
 }

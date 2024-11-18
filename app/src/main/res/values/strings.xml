@@ -37,4 +37,6 @@
     <string name="description">Deskripsi</string>
     <string name="submit">Submit</string>
     <string name="add_photo">Tambah Photo</string>
+    <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
+    <string name="title">Title</string>
 </resources>
