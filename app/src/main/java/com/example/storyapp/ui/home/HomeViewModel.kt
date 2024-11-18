@@ -18,6 +18,9 @@ class HomeViewModel(
     private val _stories = MutableLiveData<Result<List<ListStoryItem>>>()
     val stories: LiveData<Result<List<ListStoryItem>>> get() = _stories
 
+    private val _storyDetail = MutableLiveData<Result<ListStoryItem>>()
+    val storyDetail: LiveData<Result    <ListStoryItem>> get() = _storyDetail
+
     fun fetchStory() {
         viewModelScope.launch {
             dataSource.user.collect { loggedInUser ->
@@ -30,7 +33,17 @@ class HomeViewModel(
         }
     }
 
-//    fun fetchStory() = repository.fetchStory()
+    fun fetchDetailStory(id: String) {
+        viewModelScope.launch {
+            dataSource.user.collect { loggedInUser ->
+                loggedInUser?.let { user ->
+                    repository.fetchDetailStory(user.token, id).observeForever { result ->
+                        _storyDetail.postValue(result)
+                    }
+                } ?: run { _stories.postValue(Result.Error("User not logged in")) }
+            }
+        }
+    }
 
 
     private val _text = MutableLiveData<String>().apply {

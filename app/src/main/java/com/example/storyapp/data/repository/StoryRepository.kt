@@ -39,4 +39,19 @@ class StoryRepository private constructor(
             Log.e(AuthRepository.TAG, "fetchStory : $errorMessage")
         }
     }
+
+    fun fetchDetailStory(token: String, id: String): LiveData<Result<ListStoryItem>> = liveData {
+        emit(Result.Loading)
+        try {
+            val message = apiService.getDetailStoriesDetail("Bearer $token", id).story
+            emit(Result.Success(message))
+        } catch (e: HttpException) {
+            val jsonInString = e.response()?.errorBody()?.string()
+            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+            val errorMessage = errorBody.message ?: e.message.toString()
+            emit(Result.Error(errorMessage))
+            Log.e(AuthRepository.TAG, "fetchStory : $errorMessage")
+        }
+    }
+
 }

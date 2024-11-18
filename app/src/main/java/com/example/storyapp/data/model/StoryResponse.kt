@@ -14,6 +14,20 @@ data class StoryResponse(
     val message: String
 )
 
+
+data class StoryDetailResponse(
+
+    @field:SerializedName("error")
+    val error: Boolean,
+
+    @field:SerializedName("message")
+    val message: String,
+
+    @field:SerializedName("story")
+    val story: ListStoryItem
+)
+
+
 data class ListStoryItem(
 
     @field:SerializedName("photoUrl")
