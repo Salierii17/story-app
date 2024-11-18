@@ -1,4 +1,4 @@
-package com.example.storyapp.ui.detail
+package com.example.storyapp.ui.story
 
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +13,6 @@ import com.example.storyapp.R
 import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.databinding.FragmentDetailBinding
-import com.example.storyapp.ui.home.HomeViewModel
 import com.example.storyapp.utils.Result
 
 class DetailFragment : Fragment() {
@@ -21,13 +20,13 @@ class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var storyViewModel: StoryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val factory = ViewModelFactory.getInstance(requireActivity())
-        homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
+        storyViewModel = ViewModelProvider(this, factory)[StoryViewModel::class.java]
 
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
 
@@ -39,14 +38,14 @@ class DetailFragment : Fragment() {
 
         val storyId = arguments?.getString("story_id") ?: ""
 
-        homeViewModel.fetchDetailStory(storyId)
+        storyViewModel.fetchDetailStory(storyId)
 
         setupObservers()
 
     }
 
     private fun setupObservers() {
-        homeViewModel.storyDetail.observe(viewLifecycleOwner) { result ->
+        storyViewModel.storyDetail.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Loading -> {
                     binding.loading.visibility = View.VISIBLE

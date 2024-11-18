@@ -1,4 +1,4 @@
-package com.example.storyapp.ui.home
+package com.example.storyapp.ui.story
 
 import android.content.Intent
 import android.os.Bundle
@@ -25,7 +25,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var authViewModel: AuthViewModel
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var storyViewModel: StoryViewModel
     private lateinit var storyAdapter: StoryAdapter
 
     override fun onCreateView(
@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
     ): View {
         val factory = ViewModelFactory.getInstance(requireActivity())
         authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
-        homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
+        storyViewModel = ViewModelProvider(this, factory)[StoryViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
         setupRecyclerView()
         setupObservers()
 
-        homeViewModel.fetchStory()
+        storyViewModel.fetchStory()
 
         binding.actionLogout.setOnClickListener {
             logout()
@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        homeViewModel.stories.observe(viewLifecycleOwner) { result ->
+        storyViewModel.stories.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Loading -> {
                     binding.loading.visibility = View.VISIBLE

@@ -1,4 +1,4 @@
-package com.example.storyapp.ui.home
+package com.example.storyapp.ui.story
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +10,7 @@ import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.utils.Result
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
+class StoryViewModel(
     private val repository: StoryRepository, private val dataSource: LoginDataSource
 ) : ViewModel() {
 

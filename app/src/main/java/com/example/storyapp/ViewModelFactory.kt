@@ -8,7 +8,7 @@ import com.example.storyapp.data.repository.AuthRepository
 import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.di.Injection
 import com.example.storyapp.ui.auth.AuthViewModel
-import com.example.storyapp.ui.home.HomeViewModel
+import com.example.storyapp.ui.story.StoryViewModel
 
 class ViewModelFactory private constructor(
     private val authRepository: AuthRepository,
@@ -26,8 +26,8 @@ class ViewModelFactory private constructor(
                 AuthViewModel(authRepository) as T
             }
 
-            modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
-                HomeViewModel(storyRepository,loginDataSource) as T
+            modelClass.isAssignableFrom(StoryViewModel::class.java) -> {
+                StoryViewModel(storyRepository,loginDataSource) as T
             }
 
             else -> null

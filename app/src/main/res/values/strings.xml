@@ -34,4 +34,7 @@
     <string name="story_images">Story Images</string>
     <string name="username">Username</string>
     <string name="title_detail">Detail</string>
+    <string name="description">Deskripsi</string>
+    <string name="submit">Submit</string>
+    <string name="add_photo">Tambah Photo</string>
 </resources>
