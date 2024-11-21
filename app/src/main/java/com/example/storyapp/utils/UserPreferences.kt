@@ -10,17 +10,25 @@ import kotlinx.coroutines.flow.first
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-object PreferencesManager {
-    private val LANGUAGE_KEY = stringPreferencesKey("language")
+class UserPreferences(context: Context) {
 
-    suspend fun saveLanguage(context: Context, languageCode: String) {
-        context.dataStore.edit { preferences ->
+    private val dataStore: DataStore<Preferences> = context.dataStore
+
+    suspend fun saveLanguage(languageCode: String) {
+        dataStore.edit { preferences ->
             preferences[LANGUAGE_KEY] = languageCode
         }
     }
 
-    suspend fun getLanguage(context: Context): String? {
-        val preferences = context.dataStore.data.first()
+    suspend fun getLanguage(): String? {
+        val preferences = dataStore.data.first()
         return preferences[LANGUAGE_KEY]
     }
+
+    companion object {
+        private val LANGUAGE_KEY = stringPreferencesKey("language")
+    }
+
 }
+
+

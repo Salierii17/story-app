@@ -1,5 +1,6 @@
 package com.example.storyapp.ui.story
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.StoryAdapter
@@ -52,15 +54,15 @@ class HomeFragment : Fragment() {
 
 
     private fun setupRecyclerView() {
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            binding.rvAllStories.layoutManager = GridLayoutManager(requireContext(), 2)
+        } else {
+            binding.rvAllStories.layoutManager = LinearLayoutManager(requireContext())
+        }
         storyAdapter = StoryAdapter { storyItem ->
             navigateToStoryDetail(storyItem)
         }
-
-        binding.rvAllStories.apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = storyAdapter
-        }
+        binding.rvAllStories.adapter = storyAdapter
     }
 
     private fun setupObservers() {
@@ -83,7 +85,7 @@ class HomeFragment : Fragment() {
                 is Result.Error -> {
                     showLoading(false)
                     showPlaceholder(true)
-                    showToast(getString(R.string.no_internet_connection))
+                    showToast(result.error)
                 }
             }
         }

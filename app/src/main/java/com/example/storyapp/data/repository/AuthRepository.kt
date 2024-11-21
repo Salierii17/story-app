@@ -10,6 +10,7 @@ import com.example.storyapp.data.model.LoggedInUser
 import com.example.storyapp.utils.Result
 import com.google.gson.Gson
 import retrofit2.HttpException
+import java.io.IOException
 
 class AuthRepository private constructor(
     private val apiService: ApiService, private val loginDataSource: LoginDataSource
@@ -37,9 +38,15 @@ class AuthRepository private constructor(
         } catch (e: HttpException) {
             val jsonInString = e.response()?.errorBody()?.string()
             val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
-            val errorMessage = errorBody.message ?: e.message.toString()
-            emit(Result.Error(errorMessage))
+            val errorMessage = errorBody.message
+            emit(Result.Error(errorMessage.toString()))
             Log.e(TAG, "Register : $errorMessage")
+        } catch (e: IOException) {
+            emit(Result.Error("No Internet Connection"))
+            Log.e(TAG, "Register : ${e.localizedMessage}")
+        } catch (e: Exception) {
+            emit(Result.Error(e.message.toString()))
+            Log.e(TAG, "Register : ${e.localizedMessage}")
         }
     }
 
@@ -54,6 +61,9 @@ class AuthRepository private constructor(
             )
             loginDataSource.saveUser(user)
             emit(Result.Success(user))
+        } catch (e: IOException) {
+            emit(Result.Error("No Internet Connection"))
+            Log.e(TAG, "Login : ${e.localizedMessage}")
         } catch (e: Exception) {
             Log.e(TAG, "Login : ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))

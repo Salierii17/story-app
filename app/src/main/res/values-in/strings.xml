@@ -3,7 +3,7 @@
     <string name="title_add_story">Tambah Cerita</string>
     <string name="title_settings">Pengaturan</string>
     <string name="prompt_email">Email</string>
-    <string name="invalid_password">Kata sandi harus lebih dari 5 karakter</string>
+    <string name="invalid_password">Kata sandi harus lebih dari 8 karakter</string>
     <string name="placeholder_story">Tidak ada cerita</string>
     <string name="message_welcome_page">Aplikasi ini untuk Anda berbagi cerita, baik itu menyakitkan atau menyenangkan.</string>
     <string name="title_welcome_page">Selamat datang di Story App!</string>
@@ -20,7 +20,7 @@
     <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
     <string name="language">Bahasa</string>
     <string name="logout_summary">Klik untuk keluar dari akun Anda</string>
-    <string name="invalid_user">Pengguna belum masuk</string>
     <string name="list_fetch_success">Cerita berhasil dimuat</string>
-    <string name="no_internet_connection">Tidak ada koneksi internet</string>
+    <string name="success_login">"Login Berhasil "</string>
+    <string name="invalid_email">Silakan masukkan alamat email yang valid (example@domain.com)</string>
 </resources>

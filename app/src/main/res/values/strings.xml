@@ -26,7 +26,7 @@
     <string name="placeholder_story">There is no story</string>
     <string name="language">Language</string>
     <string name="logout_summary">Click to log out of your account</string>
-    <string name="invalid_user">User not logged in</string>
     <string name="list_fetch_success">Stories loaded successfully</string>
-    <string name="no_internet_connection">No internet connection</string>
+    <string name="success_login">Login Successfully</string>
+    <string name="invalid_email">Please enter a valid email address (example@domain.com)</string>
 </resources>

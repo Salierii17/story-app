@@ -38,17 +38,14 @@ class StoryRepository private constructor(
             val message = apiService.getStories("Bearer $token").listStory
             emit(Result.Success(message))
         } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string()
-            val errorMessage = try {
-                Gson().fromJson(errorBody, ErrorResponse::class.java)?.message
-            } catch (ex: Exception) {
-                "Unknown error occurred"
-            } ?: "Unknown error occurred"
-            emit(Result.Error(errorMessage))
+            val jsonInString = e.response()?.errorBody()?.string()
+            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+            val errorMessage = errorBody.message
+            emit(Result.Error(errorMessage.toString()))
             Log.e(TAG, "fetchStory: $errorMessage")
         } catch (e: IOException) {
-            emit(Result.Error("Network error: ${e.localizedMessage}"))
-            Log.e(TAG, "fetchStory: Network error", e)
+            emit(Result.Error("No Internet Connection"))
+            Log.e(TAG, "FetchStory : ${e.localizedMessage}")
         } catch (e: Exception) {
             emit(Result.Error("Unexpected error: ${e.localizedMessage}"))
             Log.e(TAG, "fetchStory: Unexpected error", e)
@@ -67,6 +64,12 @@ class StoryRepository private constructor(
             val errorMessage = errorBody.message ?: e.message.toString()
             emit(Result.Error(errorMessage))
             Log.e(TAG, "fetchDetailStory : $errorMessage")
+        } catch (e: IOException) {
+            emit(Result.Error("No Internet Connection"))
+            Log.e(TAG, "fetchDetailStory : ${e.localizedMessage}")
+        } catch (e: Exception) {
+            emit(Result.Error("Unexpected error: ${e.localizedMessage}"))
+            Log.e(TAG, "fetchDetailStory: Unexpected error", e)
         }
     }
 
@@ -83,9 +86,15 @@ class StoryRepository private constructor(
         } catch (e: HttpException) {
             val jsonInString = e.response()?.errorBody()?.string()
             val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
-            val errorMessage = errorBody.message ?: e.message.toString()
-            emit(Result.Error(errorMessage))
+            val errorMessage = errorBody.message
+            emit(Result.Error(errorMessage.toString()))
             Log.e(TAG, "addStory : $errorMessage")
+        } catch (e: IOException) {
+            emit(Result.Error("No Internet Connection"))
+            Log.e(TAG, "addStory : ${e.localizedMessage}")
+        } catch (e: Exception) {
+            emit(Result.Error("Unexpected error: ${e.localizedMessage}"))
+            Log.e(TAG, "addStory: Unexpected error", e)
         }
     }
 

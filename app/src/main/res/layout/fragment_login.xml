@@ -30,8 +30,8 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         app:endIconMode="clear_text"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"
         app:startIconDrawable="@drawable/ic_baseline_email_24">
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/prompt_email"
-            android:inputType="textEmailAddress"
+            android:inputType="textEmailAddress|text"
             android:selectAllOnFocus="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -65,7 +65,7 @@
         <com.example.storyapp.ui.view.MyEditText
             android:id="@+id/ed_login_password"
             android:layout_width="match_parent"
-            android:layout_height="61dp"
+            android:layout_height="wrap_content"
             android:hint="@string/password"
             android:imeActionLabel="@string/action_sign_in"
             android:imeOptions="actionDone"

@@ -3,15 +3,15 @@ package com.example.storyapp
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.auth.AuthActivity
-import com.example.storyapp.utils.PreferencesManager
+import com.example.storyapp.ui.settings.LanguageViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -19,6 +19,8 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var languageViewModel: LanguageViewModel
     private lateinit var loginDataSource: LoginDataSource
 
     private lateinit var navController: NavController
@@ -27,9 +29,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
+
+        val factory = ViewModelFactory.getInstance(this)
+        languageViewModel = ViewModelProvider(this, factory)[LanguageViewModel::class.java]
         loginDataSource = LoginDataSource(this)
+
+        languageViewModel.language.observe(this) { languageCode ->
+            setLocale(languageCode)
+        }
+
+        lifecycleScope.launch {
+            val savedLanguage = languageViewModel.loadLanguage().toString()
+            setLocale(savedLanguage)
+        }
+
 
         lifecycleScope.launch {
             val isLoggedIn = loginDataSource.isLoggedIn()
@@ -38,34 +52,20 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
                 return@launch
-            }
-            setupUI()
-        }
-        lifecycleScope.launch {
-            val savedLanguage = PreferencesManager.getLanguage(applicationContext)
-            if (savedLanguage != null) {
-                setLocale(savedLanguage)
             } else {
-                setLocale("en")
+                setupUI()
             }
         }
+
+        setContentView(binding.root)
     }
 
     private fun setupUI() {
         val navView: BottomNavigationView = binding.navView
 
-
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
-
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_add_story, R.id.navigation_settings
-            )
-        )
         navView.setupWithNavController(navController)
     }
 
@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         val config = resources.configuration
         config.setLocale(locale)
         resources.updateConfiguration(config, resources.displayMetrics)
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

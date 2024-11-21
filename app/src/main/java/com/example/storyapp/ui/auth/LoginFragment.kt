@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
 import com.example.storyapp.MainActivity
+import com.example.storyapp.R
 import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.databinding.FragmentLoginBinding
 import com.example.storyapp.utils.Result
@@ -95,7 +96,7 @@ class LoginFragment : Fragment() {
                     is Result.Success -> {
                         showLoading(false)
                         val user = result.data
-                        showToast("Login Successfully")
+                        showToast(getString(R.string.success_login))
 
                         lifecycleScope.launch {
                             authViewModel.saveUser(user)

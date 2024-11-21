@@ -26,8 +26,6 @@ class AddStoryFragment : Fragment() {
 
     private lateinit var storyViewModel: StoryViewModel
 
-    private var currentImageUri: Uri? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -36,6 +34,13 @@ class AddStoryFragment : Fragment() {
         storyViewModel = ViewModelProvider(this, factory)[StoryViewModel::class.java]
 
         _binding = FragmentAddStoryBinding.inflate(inflater, container, false)
+
+        storyViewModel.imageUri.observe(viewLifecycleOwner) { uri ->
+            uri?.let {
+                showImage(it)
+            }
+        }
+
         return binding.root
     }
 
@@ -75,22 +80,18 @@ class AddStoryFragment : Fragment() {
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
-            currentImageUri = uri
-            showImage()
+            storyViewModel.setImageUri(uri)
         } else {
             Log.d("Photo Picker", "No media selected")
         }
     }
 
-    private fun showImage() {
-        currentImageUri?.let {
-            Log.d("Image URI", "showImage: $it")
-            binding.ivAddPhoto.setImageURI(it)
-        }
+    private fun showImage(uri: Uri) {
+        binding.ivAddPhoto.setImageURI(uri)
     }
 
     private fun submitStory() {
-        currentImageUri?.let { uri ->
+        storyViewModel.imageUri.value?.let { uri ->
             val imageFile = uriToFile(uri, requireContext()).reduceFileImage()
             Log.d("Image File", "showImage: ${imageFile.path}")
             val description = binding.edAddDescription.text.toString()

@@ -5,14 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.data.repository.AuthRepository
+import com.example.storyapp.data.repository.LanguageRepository
 import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.di.Injection
 import com.example.storyapp.ui.auth.AuthViewModel
+import com.example.storyapp.ui.settings.LanguageViewModel
 import com.example.storyapp.ui.story.StoryViewModel
 
 class ViewModelFactory private constructor(
     private val authRepository: AuthRepository,
     private val storyRepository: StoryRepository,
+    private val languageRepository: LanguageRepository,
     private val loginDataSource: LoginDataSource
 ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -30,6 +33,10 @@ class ViewModelFactory private constructor(
                 StoryViewModel(storyRepository, loginDataSource) as T
             }
 
+            modelClass.isAssignableFrom(LanguageViewModel::class.java) -> {
+                LanguageViewModel(languageRepository) as T
+            }
+
             else -> null
         }
     }
@@ -41,6 +48,7 @@ class ViewModelFactory private constructor(
             instance ?: ViewModelFactory(
                 Injection.provideAuthRepository(context),
                 Injection.provideStoryRepository(),
+                Injection.provideLanguageRepository(context),
                 Injection.provideLoginDataSource(context)
             )
         }.also { instance = it }

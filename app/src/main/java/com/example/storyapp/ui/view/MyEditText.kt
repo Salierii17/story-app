@@ -21,8 +21,11 @@ class MyEditText @JvmOverloads constructor(
         context, R.drawable.ic_close_black_24dp
     ) as Drawable
 
+    private val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+
     init {
         setOnTouchListener(this)
+
 
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -30,15 +33,31 @@ class MyEditText @JvmOverloads constructor(
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (inputType == (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
-                    if (s.length < 8) {
-                        setError(R.string.invalid_password.toString(), null)
-                    } else {
+                when (inputType) {
+                    InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT -> {
+                        // Password validation
+                        error = if (s.length < 8) {
+                            context.getString(R.string.invalid_password)
+                        } else {
+                            null
+                        }
+                    }
+
+                    InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS or InputType.TYPE_CLASS_TEXT -> {
+                        // Email validation
+                        val email = s.toString().trim()
+                        error = if (email.isEmpty()) {
+                            null // Clear error if email is empty
+                        } else if (!email.matches(emailPattern.toRegex())) {
+                            context.getString(R.string.invalid_email) // Show error for invalid email
+                        } else {
+                            null // Clear error for valid email
+                        }
+                    }
+
+                    else -> {
                         error = null
                     }
-                }
-                if (inputType == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS && !s.contains("@")) {
-                    setError("Invalid email format", null)
                 }
             }
 
@@ -47,6 +66,7 @@ class MyEditText @JvmOverloads constructor(
             }
         })
     }
+
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)

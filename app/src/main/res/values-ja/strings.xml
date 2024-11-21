@@ -20,7 +20,7 @@
     <string name="empty_image_warning">まず画像ファイルを追加してください。</string>
     <string name="language">言語</string>
     <string name="logout_summary">アカウントからログアウトするにはクリックしてください</string>
-    <string name="invalid_user">ユーザーがログインしていません</string>
     <string name="list_fetch_success">ストーリーの読み込みが完了しました</string>
-    <string name="no_internet_connection">インターネット接続がありません</string>
+    <string name="success_login">ログインに成功しました</string>
+    <string name="invalid_email">有効なメールアドレスを入力してください（example@domain.com）</string>
 </resources>
