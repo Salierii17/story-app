@@ -13,13 +13,26 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_detail"
             app:destination="@id/navigation_detail" />
+        <argument
+            android:name="story_id"
+            app:argType="string" />
+        <argument
+            android:name="story_photo_transition_name"
+            app:argType="string" />
+        <argument
+            android:name="story_name_transition_name"
+            app:argType="string" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_add_story"
         android:name="com.example.storyapp.ui.story.AddStoryFragment"
         android:label="@string/title_add_story"
-        tools:layout="@layout/fragment_add_story" />
+        tools:layout="@layout/fragment_add_story" >
+        <action
+            android:id="@+id/action_navigation_add_story_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_settings"

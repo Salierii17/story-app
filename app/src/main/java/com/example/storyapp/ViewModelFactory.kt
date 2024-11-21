@@ -27,7 +27,7 @@ class ViewModelFactory private constructor(
             }
 
             modelClass.isAssignableFrom(StoryViewModel::class.java) -> {
-                StoryViewModel(storyRepository,loginDataSource) as T
+                StoryViewModel(storyRepository, loginDataSource) as T
             }
 
             else -> null
@@ -40,7 +40,7 @@ class ViewModelFactory private constructor(
         fun getInstance(context: Context): ViewModelFactory = instance ?: synchronized(this) {
             instance ?: ViewModelFactory(
                 Injection.provideAuthRepository(context),
-                Injection.provideStoryRepository(context),
+                Injection.provideStoryRepository(),
                 Injection.provideLoginDataSource(context)
             )
         }.also { instance = it }

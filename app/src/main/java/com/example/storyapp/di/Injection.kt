@@ -23,7 +23,7 @@ object Injection {
         return AuthRepository.getInstance(apiService, loginDataSource)
     }
 
-    fun provideStoryRepository(context: Context): StoryRepository {
+    fun provideStoryRepository(): StoryRepository {
         val apiService = provideApiService()
         return StoryRepository.getInstance(apiService)
     }

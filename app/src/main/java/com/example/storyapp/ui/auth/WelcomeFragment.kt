@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.example.storyapp.R
 import com.example.storyapp.databinding.FragmentWelcomeBinding
@@ -26,10 +27,20 @@ class WelcomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.signupButton.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_welcome_to_navigation_registration)
+            val extras = FragmentNavigatorExtras(
+                binding.titleTextView to "title"
+            )
+            findNavController().navigate(
+                R.id.action_navigation_welcome_to_navigation_registration, null, null, extras
+            )
         }
         binding.loginButton.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_welcome_to_navigation_login)
+            val extras = FragmentNavigatorExtras(
+                binding.titleTextView to "title"
+            )
+            findNavController().navigate(
+                R.id.action_navigation_welcome_to_navigation_login, null, null, extras
+            )
         }
     }
 

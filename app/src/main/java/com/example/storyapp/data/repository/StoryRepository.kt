@@ -14,6 +14,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import java.io.File
+import java.io.IOException
 
 class StoryRepository private constructor(
     private val apiService: ApiService
@@ -37,11 +38,20 @@ class StoryRepository private constructor(
             val message = apiService.getStories("Bearer $token").listStory
             emit(Result.Success(message))
         } catch (e: HttpException) {
-            val jsonInString = e.response()?.errorBody()?.string()
-            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
-            val errorMessage = errorBody.message ?: e.message.toString()
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorMessage = try {
+                Gson().fromJson(errorBody, ErrorResponse::class.java)?.message
+            } catch (ex: Exception) {
+                "Unknown error occurred"
+            } ?: "Unknown error occurred"
             emit(Result.Error(errorMessage))
-            Log.e(AuthRepository.TAG, "fetchStory : $errorMessage")
+            Log.e(TAG, "fetchStory: $errorMessage")
+        } catch (e: IOException) {
+            emit(Result.Error("Network error: ${e.localizedMessage}"))
+            Log.e(TAG, "fetchStory: Network error", e)
+        } catch (e: Exception) {
+            emit(Result.Error("Unexpected error: ${e.localizedMessage}"))
+            Log.e(TAG, "fetchStory: Unexpected error", e)
         }
     }
 
@@ -56,7 +66,7 @@ class StoryRepository private constructor(
             val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
             val errorMessage = errorBody.message ?: e.message.toString()
             emit(Result.Error(errorMessage))
-            Log.e(AuthRepository.TAG, "fetchDetailStory : $errorMessage")
+            Log.e(TAG, "fetchDetailStory : $errorMessage")
         }
     }
 
@@ -75,7 +85,7 @@ class StoryRepository private constructor(
             val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
             val errorMessage = errorBody.message ?: e.message.toString()
             emit(Result.Error(errorMessage))
-            Log.e(AuthRepository.TAG, "addStory : $errorMessage")
+            Log.e(TAG, "addStory : $errorMessage")
         }
     }
 

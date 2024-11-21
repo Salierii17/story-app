@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 
 val Context.dataStore by preferencesDataStore(name = "user_prefs")
 
-class LoginDataSource(private val context: Context) {
+class LoginDataSource(context: Context) {
 
     private val dataStore = context.dataStore
 

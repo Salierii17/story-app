@@ -25,10 +25,10 @@ class DetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentDetailBinding.inflate(inflater, container, false)
+
         val factory = ViewModelFactory.getInstance(requireActivity())
         storyViewModel = ViewModelProvider(this, factory)[StoryViewModel::class.java]
-
-        _binding = FragmentDetailBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -36,9 +36,11 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val storyId = arguments?.getString("story_id") ?: ""
+        val storyId = arguments?.getString("story_id")
 
-        storyViewModel.fetchDetailStory(storyId)
+        if (storyId != null) {
+            storyViewModel.fetchDetailStory(storyId)
+        }
 
         setupObservers()
 
@@ -48,11 +50,11 @@ class DetailFragment : Fragment() {
         storyViewModel.storyDetail.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Loading -> {
-                    binding.loading.visibility = View.VISIBLE
+                    showLoading(true)
                 }
 
                 is Result.Success -> {
-                    binding.loading.visibility = View.GONE
+                    showLoading(false)
                     val storyData = result.data
                     Log.d("HomeFragment", "Fetched stories: $storyData")
 
@@ -60,7 +62,7 @@ class DetailFragment : Fragment() {
                 }
 
                 is Result.Error -> {
-                    binding.loading.visibility = View.GONE
+                    showLoading(false)
                     showToast("Error: ${result.error}")
                 }
             }
@@ -70,12 +72,15 @@ class DetailFragment : Fragment() {
     private fun setStoryDetailData(storyData: ListStoryItem) {
 
         Glide.with(this).load(storyData.photoUrl).placeholder(R.drawable.ic_loading)
-            .error(R.drawable.ic_broken_image)
-            .into(binding.ivDetailPhoto)
+            .error(R.drawable.ic_broken_image).into(binding.ivDetailPhoto)
 
         binding.tvDetailName.text = storyData.name
         binding.tvDetailDescription.text = storyData.description
 
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.loading.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private fun showToast(message: String) {

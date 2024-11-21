@@ -1,14 +1,18 @@
 package com.example.storyapp.ui.auth
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.transition.TransitionInflater
 import com.example.storyapp.MainActivity
 import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.databinding.FragmentLoginBinding
@@ -27,6 +31,13 @@ class LoginFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
+
+        sharedElementEnterTransition =
+            TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
+
+        sharedElementReturnTransition =
+            TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
+
         return binding.root
     }
 
@@ -42,6 +53,35 @@ class LoginFragment : Fragment() {
 
             login(email, password)
         }
+        startAnimations()
+    }
+
+    private fun startAnimations() {
+        binding.edLoginEmailLayout.translationX = -1000f
+        binding.edLoginPasswordLayout.translationX = 1000f
+        binding.btnLogin.translationY = 1000f
+
+        val emailEditTextAnimator =
+            ObjectAnimator.ofFloat(binding.edLoginEmailLayout, "translationX", 0f).apply {
+                duration = 500
+                interpolator = DecelerateInterpolator()
+            }
+
+        val passwordEditTextAnimator =
+            ObjectAnimator.ofFloat(binding.edLoginPasswordLayout, "translationX", 0f).apply {
+                duration = 500
+                interpolator = DecelerateInterpolator()
+            }
+
+        val buttonAnimator = ObjectAnimator.ofFloat(binding.btnLogin, "translationY", 0f).apply {
+            duration = 500
+            interpolator = DecelerateInterpolator()
+        }
+
+        AnimatorSet().apply {
+            playTogether(emailEditTextAnimator, passwordEditTextAnimator, buttonAnimator)
+            start()
+        }
     }
 
     private fun login(email: String, password: String) {
@@ -49,11 +89,11 @@ class LoginFragment : Fragment() {
             if (result != null) {
                 when (result) {
                     is Result.Loading -> {
-                        binding.loading.visibility = View.VISIBLE
+                        showLoading(true)
                     }
 
                     is Result.Success -> {
-                        binding.loading.visibility = View.GONE
+                        showLoading(false)
                         val user = result.data
                         showToast("Login Successfully")
 
@@ -70,13 +110,16 @@ class LoginFragment : Fragment() {
                     }
 
                     is Result.Error -> {
-                        binding.loading.visibility = View.GONE
+                        showLoading(false)
                         showToast("Error: ${result.error}")
                     }
-
                 }
             }
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private fun showToast(message: String) {

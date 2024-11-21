@@ -7,12 +7,12 @@
         android:icon="@drawable/ic_language_24px"
         android:key="language"
         android:summary="%s"
-        android:title="Language" />
+        android:title="@string/language" />
 
     <Preference
         android:icon="@drawable/ic_logout_24px"
         android:key="logout"
-        android:summary="Click to log out of your account"
-        android:title="Logout" />
+        android:summary="@string/logout_summary"
+        android:title="@string/logout" />
 
 </PreferenceScreen>

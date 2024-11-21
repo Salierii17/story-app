@@ -13,6 +13,7 @@
         <action
             android:id="@+id/action_navigation_welcome_to_navigation_registration"
             app:destination="@id/navigation_registration" />
+
         <action
             android:id="@+id/action_navigation_welcome_to_navigation_login"
             app:destination="@id/navigation_login" />

@@ -18,8 +18,7 @@ class MyEditText @JvmOverloads constructor(
 ) : AppCompatEditText(context, attrs), View.OnTouchListener {
 
     private var clearButtonImage: Drawable = ContextCompat.getDrawable(
-        context,
-        R.drawable.ic_close_black_24dp
+        context, R.drawable.ic_close_black_24dp
     ) as Drawable
 
     init {
@@ -31,13 +30,13 @@ class MyEditText @JvmOverloads constructor(
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (inputType == (InputType.TYPE_CLASS_TEXT or  InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
-                if (s.length < 8) {
-                    setError("Password tidak boleh kurang dari 8 karakter", null)
-                } else {
-                    error = null
+                if (inputType == (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+                    if (s.length < 8) {
+                        setError(R.string.invalid_password.toString(), null)
+                    } else {
+                        error = null
+                    }
                 }
-}
                 if (inputType == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS && !s.contains("@")) {
                     setError("Invalid email format", null)
                 }
@@ -65,10 +64,7 @@ class MyEditText @JvmOverloads constructor(
         bottomOfTheText: Drawable? = null
     ) {
         setCompoundDrawablesWithIntrinsicBounds(
-            startOfTheText,
-            topOfTheText,
-            endOfTheText,
-            bottomOfTheText
+            startOfTheText, topOfTheText, endOfTheText, bottomOfTheText
         )
     }
 
@@ -82,8 +78,7 @@ class MyEditText @JvmOverloads constructor(
                 clearButtonEnd = (clearButtonImage.intrinsicWidth + paddingStart).toFloat()
                 if (event.x < clearButtonEnd) isClearButtonClicked = true
             } else {
-                clearButtonStart =
-                    (width - paddingEnd - clearButtonImage.intrinsicWidth).toFloat()
+                clearButtonStart = (width - paddingEnd - clearButtonImage.intrinsicWidth).toFloat()
                 if (event.x > clearButtonStart) isClearButtonClicked = true
             }
 
@@ -96,9 +91,5 @@ class MyEditText @JvmOverloads constructor(
             }
         }
         return false
-    }
-
-    override fun getText(): Editable? {
-        return super.getText()
     }
 }

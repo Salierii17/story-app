@@ -11,6 +11,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.storyapp.R
 import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.databinding.FragmentAddStoryBinding
@@ -55,6 +56,7 @@ class AddStoryFragment : Fragment() {
                 is Result.Success -> {
                     showLoading(false)
                     showToast(result.data.message)
+                    findNavController().navigate(R.id.action_navigation_add_story_to_navigation_home)
                 }
 
                 is Result.Error -> {
@@ -101,7 +103,7 @@ class AddStoryFragment : Fragment() {
     }
 
     private fun showLoading(isLoading: Boolean) {
-        binding.loading.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {

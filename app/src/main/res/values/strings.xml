@@ -1,46 +1,32 @@
-<resources>
-    <string name="app_name">Story App</string>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+    <string name="app_name" translatable="false">Story App</string>
     <string name="title_home">Home</string>
     <string name="title_add_story">Add Story</string>
     <string name="title_settings">Settings</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="welcome">Welcome!</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">Login failed</string>
-    <string name="signup">Sign Up</string>
-    <string name="login">Log In</string>
-    <string name="message_welcome_page">Want to learn Android, iOS, Machine Learning, Cloud, Front-End, Back-End, and other IT skills? Join Dicoding!</string>
-    <string name="title_welcome_page">Welcome to Dicoding!</string>
-    <string name="title_signup_page">Fill in your details below</string>
+    <string name="action_sign_in" translatable="false">Sign in</string>
+    <string name="invalid_password">Password must be at least 8 characters</string>
+    <string name="signup" translatable="false">Sign Up</string>
+    <string name="login" translatable="false">Log In</string>
+    <string name="message_welcome_page">This app is for you to share your story, whether it\'s painful or joyful</string>
+    <string name="title_welcome_page">Welcome to Story App!</string>
     <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="message_login_page">Enter your details first</string>
-    <string name="title_login_page">Ready to upgrade your skills?</string>
+    <string name="password" translatable="false">Password</string>
     <string name="name">Name</string>
-    <string name="message_main_page">Happy Learning at Dicoding.</string>
-    <string name="greeting">Hello %1$s,</string>
-    <string name="logout">Logout</string>
+    <string name="logout" translatable="false">Logout</string>
     <string name="title_welcome">Welcome</string>
     <string name="title_registration">Registration</string>
     <string name="title_login">Login</string>
     <string name="story_images">Story Images</string>
-    <string name="username">Username</string>
     <string name="title_detail">Detail</string>
     <string name="description">Description</string>
     <string name="submit">Submit</string>
     <string name="add_photo">Add Photo</string>
     <string name="empty_image_warning">Please add an image file first.</string>
-    <string name="title">Title</string>
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="placeholder_story">There is no story</string>
+    <string name="language">Language</string>
+    <string name="logout_summary">Click to log out of your account</string>
+    <string name="invalid_user">User not logged in</string>
+    <string name="list_fetch_success">Stories loaded successfully</string>
+    <string name="no_internet_connection">No internet connection</string>
 </resources>

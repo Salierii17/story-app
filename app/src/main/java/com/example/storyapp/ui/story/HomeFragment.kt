@@ -1,6 +1,5 @@
 package com.example.storyapp.ui.story
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.StoryAdapter
 import com.example.storyapp.ViewModelFactory
+import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.databinding.FragmentHomeBinding
-import com.example.storyapp.ui.auth.AuthActivity
 import com.example.storyapp.ui.auth.AuthViewModel
 import com.example.storyapp.utils.Result
 
@@ -49,15 +48,12 @@ class HomeFragment : Fragment() {
 
         storyViewModel.fetchStory()
 
-        binding.actionLogout.setOnClickListener {
-            logout()
-        }
     }
 
 
     private fun setupRecyclerView() {
         storyAdapter = StoryAdapter { storyItem ->
-            navigateToStoryDetail(storyItem.id)
+            navigateToStoryDetail(storyItem)
         }
 
         binding.rvAllStories.apply {
@@ -71,43 +67,47 @@ class HomeFragment : Fragment() {
         storyViewModel.stories.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Loading -> {
-                    binding.loading.visibility = View.VISIBLE
+                    showLoading(true)
+                    showPlaceholder(false)
                 }
 
                 is Result.Success -> {
-                    binding.loading.visibility = View.GONE
+                    showLoading(false)
+                    showPlaceholder(false)
                     val storyData = result.data
                     Log.d("HomeFragment", "Fetched stories: $storyData")
                     storyAdapter.submitList(storyData)
-                    showToast("Success: Fetch Successfully")
+                    showToast(getString(R.string.list_fetch_success))
                 }
 
                 is Result.Error -> {
-                    binding.loading.visibility = View.GONE
-                    showToast("Error: ${result.error}")
+                    showLoading(false)
+                    showPlaceholder(true)
+                    showToast(getString(R.string.no_internet_connection))
                 }
             }
         }
     }
 
-    private fun navigateToStoryDetail(id: String) {
+    private fun navigateToStoryDetail(storyItem: ListStoryItem) {
         val bundle = Bundle().apply {
-            putString("story_id", id)
+            putString("story_id", storyItem.id)
         }
         findNavController().navigate(R.id.action_navigation_home_to_navigation_detail, bundle)
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun showPlaceholder(isEmpty: Boolean) {
+        binding.placeholder.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 
     private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun logout() {
-        authViewModel.logout()
-
-        val intent = Intent(requireContext(), AuthActivity::class.java)
-        startActivity(intent)
-        requireActivity().finishAffinity()
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
