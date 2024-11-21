@@ -86,10 +86,6 @@ class AddStoryFragment : Fragment() {
         }
     }
 
-    private fun showImage(uri: Uri) {
-        binding.ivAddPhoto.setImageURI(uri)
-    }
-
     private fun submitStory() {
         storyViewModel.imageUri.value?.let { uri ->
             val imageFile = uriToFile(uri, requireContext()).reduceFileImage()
@@ -97,6 +93,10 @@ class AddStoryFragment : Fragment() {
             val description = binding.edAddDescription.text.toString()
             storyViewModel.addStory(imageFile, description)
         } ?: showToast(getString(R.string.empty_image_warning))
+    }
+
+    private fun showImage(uri: Uri) {
+        binding.ivAddPhoto.setImageURI(uri)
     }
 
     private fun showToast(message: String) {

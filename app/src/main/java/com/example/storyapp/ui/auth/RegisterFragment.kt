@@ -10,7 +10,9 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
+import com.example.storyapp.R
 import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.databinding.FragmentRegisterBinding
 import com.example.storyapp.utils.Result
@@ -109,6 +111,7 @@ class RegisterFragment : Fragment() {
                         val message = result.data
                         showToast("Success: $message")
 
+                        findNavController().navigate(R.id.action_navigation_registration_to_navigation_welcome)
                     }
 
                     is Result.Error -> {

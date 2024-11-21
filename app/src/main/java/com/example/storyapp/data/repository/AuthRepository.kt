@@ -3,7 +3,7 @@ package com.example.storyapp.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import com.example.storyapp.data.LoginDataSource
+import com.example.storyapp.data.preferences.LoginDataSource
 import com.example.storyapp.data.api.ApiService
 import com.example.storyapp.data.model.ErrorResponse
 import com.example.storyapp.data.model.LoggedInUser

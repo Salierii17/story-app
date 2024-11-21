@@ -1,6 +1,6 @@
 package com.example.storyapp.data.repository
 
-import com.example.storyapp.utils.UserPreferences
+import com.example.storyapp.data.preferences.UserPreferences
 
 class LanguageRepository private constructor(
     private val userPreferences: UserPreferences

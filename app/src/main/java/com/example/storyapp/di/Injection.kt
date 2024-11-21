@@ -1,13 +1,13 @@
 package com.example.storyapp.di
 
 import android.content.Context
-import com.example.storyapp.data.LoginDataSource
+import com.example.storyapp.data.preferences.LoginDataSource
 import com.example.storyapp.data.api.ApiConfig
 import com.example.storyapp.data.api.ApiService
 import com.example.storyapp.data.repository.AuthRepository
 import com.example.storyapp.data.repository.LanguageRepository
 import com.example.storyapp.data.repository.StoryRepository
-import com.example.storyapp.utils.UserPreferences
+import com.example.storyapp.data.preferences.UserPreferences
 
 object Injection {
 
