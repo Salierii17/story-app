@@ -29,4 +29,5 @@
     <string name="list_fetch_success">Stories loaded successfully</string>
     <string name="success_login">Login Successfully</string>
     <string name="invalid_email">Please enter a valid email address (example@domain.com)</string>
+    <string name="updating_language">Updating …</string>
 </resources>

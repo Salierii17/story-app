@@ -1,7 +1,10 @@
 package com.example.storyapp.ui.settings
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.ListPreference
@@ -18,7 +21,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private lateinit var authViewModel: AuthViewModel
     private lateinit var languageViewModel: LanguageViewModel
-
+    private var loadingDialog: AlertDialog? = null
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -32,10 +35,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
         languagePreference?.setOnPreferenceChangeListener { _, newValue ->
             val languageCode = newValue.toString()
 
+            showDialog()
+
             lifecycleScope.launch {
                 languageViewModel.saveLanguage(languageCode)
             }
-            setLocale(newValue.toString())
+            updateLanguage(languageCode)
+
             true
         }
 
@@ -46,6 +52,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
+    private fun updateLanguage(languageCode: String) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            setLocale(languageCode)
+            hideDialog()
+        }, 1000)
+    }
+
     private fun setLocale(languageCode: String) {
         val locale = Locale(languageCode)
         Locale.setDefault(locale)
@@ -53,6 +66,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         config.setLocale(locale)
         resources.updateConfiguration(config, resources.displayMetrics)
         requireActivity().recreate()
+    }
+
+    private fun showDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage(getString(R.string.updating_language))
+            .setCancelable(false)
+
+        loadingDialog = builder.create()
+        loadingDialog?.show()
+    }
+
+    private fun hideDialog() {
+        loadingDialog?.dismiss()
     }
 
 

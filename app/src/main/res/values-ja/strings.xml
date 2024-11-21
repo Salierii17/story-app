@@ -23,4 +23,5 @@
     <string name="list_fetch_success">ストーリーの読み込みが完了しました</string>
     <string name="success_login">ログインに成功しました</string>
     <string name="invalid_email">有効なメールアドレスを入力してください（example@domain.com）</string>
+    <string name="updating_language">更新中…</string>
 </resources>

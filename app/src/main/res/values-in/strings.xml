@@ -23,4 +23,5 @@
     <string name="list_fetch_success">Cerita berhasil dimuat</string>
     <string name="success_login">"Login Berhasil "</string>
     <string name="invalid_email">Silakan masukkan alamat email yang valid (example@domain.com)</string>
+    <string name="updating_language">Memperbarui …</string>
 </resources>
