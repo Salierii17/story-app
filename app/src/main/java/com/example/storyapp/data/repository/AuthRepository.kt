@@ -60,9 +60,6 @@ class AuthRepository private constructor(
         }
     }
 
-
-    fun getLoggedInUser() = loginDataSource.user
-
     suspend fun saveUser(loggedInUser: LoggedInUser) = loginDataSource.saveUser(loggedInUser)
 
     suspend fun logout() = loginDataSource.logout()

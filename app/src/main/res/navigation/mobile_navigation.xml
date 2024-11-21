@@ -22,13 +22,14 @@
         tools:layout="@layout/fragment_add_story" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.storyapp.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_settings"
+        android:name="com.example.storyapp.SettingsFragment"
+        android:label="@string/title_settings" />
+
     <fragment
         android:id="@+id/navigation_detail"
         android:name="com.example.storyapp.ui.story.DetailFragment"
         android:label="@string/title_detail"
         tools:layout="@layout/fragment_detail" />
+
 </navigation>

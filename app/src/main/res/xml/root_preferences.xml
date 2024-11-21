@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="en"
+        android:entries="@array/language_names"
+        android:entryValues="@array/language_codes"
+        android:icon="@drawable/ic_language_24px"
+        android:key="language"
+        android:summary="%s"
+        android:title="Language" />
+
+    <Preference
+        android:icon="@drawable/ic_logout_24px"
+        android:key="logout"
+        android:summary="Click to log out of your account"
+        android:title="Logout" />
+
+</PreferenceScreen>

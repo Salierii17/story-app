@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.annotation)
+    implementation(libs.androidx.preference)
     testImplementation(libs.junit)
     implementation(libs.androidx.fragment.ktx)
 
