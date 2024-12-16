@@ -8,7 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.storyapp.data.preferences.LoginDataSource
+import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.auth.AuthActivity
 import com.example.storyapp.ui.settings.LanguageViewModel
@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
+
         val factory = ViewModelFactory.getInstance(this)
         languageViewModel = ViewModelProvider(this, factory)[LanguageViewModel::class.java]
         loginDataSource = LoginDataSource(this)
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             val savedLanguage = languageViewModel.loadLanguage().toString()
             setLocale(savedLanguage)
         }
+
 
         lifecycleScope.launch {
             val isLoggedIn = loginDataSource.isLoggedIn()

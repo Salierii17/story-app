@@ -70,7 +70,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun showDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setMessage(getString(R.string.updating_language)).setCancelable(false)
+        builder.setMessage(getString(R.string.updating_language))
+            .setCancelable(false)
 
         loadingDialog = builder.create()
         loadingDialog?.show()
@@ -79,6 +80,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun hideDialog() {
         loadingDialog?.dismiss()
     }
+
 
     private fun logout() {
         authViewModel.logout()

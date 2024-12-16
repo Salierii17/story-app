@@ -1,4 +1,4 @@
-package com.example.storyapp.data.preferences
+package com.example.storyapp.utils
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -8,11 +8,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
 
-val Context.userPreferencesStore by preferencesDataStore(name = "settings")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class UserPreferences(context: Context) {
 
-    private val dataStore: DataStore<Preferences> = context.userPreferencesStore
+    private val dataStore: DataStore<Preferences> = context.dataStore
 
     suspend fun saveLanguage(languageCode: String) {
         dataStore.edit { preferences ->

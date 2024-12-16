@@ -1,4 +1,4 @@
-package com.example.storyapp.data.preferences
+package com.example.storyapp.data
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 
-val Context.UserAuthDataStore by preferencesDataStore(name = "user_prefs")
+val Context.dataStore by preferencesDataStore(name = "user_prefs")
 
 class LoginDataSource(context: Context) {
 
-    private val dataStore = context.UserAuthDataStore
+    private val dataStore = context.dataStore
 
     suspend fun saveUser(loggedInUser: LoggedInUser) {
         dataStore.edit { preferences ->
@@ -23,7 +23,7 @@ class LoginDataSource(context: Context) {
         }
     }
 
-    val user = context.UserAuthDataStore.data.map { preferences ->
+    val user = context.dataStore.data.map { preferences ->
         val userId = preferences[USER_ID_KEY]
         val name = preferences[USER_NAME_KEY]
         val token = preferences[USER_TOKEN_KEY]

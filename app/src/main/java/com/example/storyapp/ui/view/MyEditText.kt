@@ -26,6 +26,7 @@ class MyEditText @JvmOverloads constructor(
     init {
         setOnTouchListener(this)
 
+
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // Do nothing.
@@ -34,6 +35,7 @@ class MyEditText @JvmOverloads constructor(
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 when (inputType) {
                     InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT -> {
+                        // Password validation
                         error = if (s.length < 8) {
                             context.getString(R.string.invalid_password)
                         } else {
@@ -42,13 +44,14 @@ class MyEditText @JvmOverloads constructor(
                     }
 
                     InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS or InputType.TYPE_CLASS_TEXT -> {
+                        // Email validation
                         val email = s.toString().trim()
                         error = if (email.isEmpty()) {
-                            null
+                            null // Clear error if email is empty
                         } else if (!email.matches(emailPattern.toRegex())) {
-                            context.getString(R.string.invalid_email)
+                            context.getString(R.string.invalid_email) // Show error for invalid email
                         } else {
-                            null
+                            null // Clear error for valid email
                         }
                     }
 

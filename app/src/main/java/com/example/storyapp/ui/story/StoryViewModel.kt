@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.storyapp.data.preferences.LoginDataSource
+import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.data.model.StoryResponse
 import com.example.storyapp.data.repository.StoryRepository

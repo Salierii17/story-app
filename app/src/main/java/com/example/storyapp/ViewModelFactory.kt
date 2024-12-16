@@ -3,7 +3,7 @@ package com.example.storyapp
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.storyapp.data.preferences.LoginDataSource
+import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.data.repository.AuthRepository
 import com.example.storyapp.data.repository.LanguageRepository
 import com.example.storyapp.data.repository.StoryRepository
