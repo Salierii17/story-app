@@ -11,6 +11,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.storyapp.R
 import com.example.storyapp.databinding.FragmentAddStoryBinding
@@ -18,6 +19,8 @@ import com.example.storyapp.utils.Result
 import com.example.storyapp.utils.reduceFileImage
 import com.example.storyapp.utils.uriToFile
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AddStoryFragment : Fragment() {
@@ -53,18 +56,21 @@ class AddStoryFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        storyViewModel.addStory.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Loading -> showLoading(true)
-                is Result.Success -> {
-                    showLoading(false)
-                    showToast(result.data.message)
-                    findNavController().navigate(R.id.action_navigation_add_story_to_navigation_home)
-                }
+        lifecycleScope.launch {
+            storyViewModel.addStory.collectLatest { result ->
+                when (result) {
+                    is Result.Initial -> Unit
+                    is Result.Loading -> showLoading(true)
+                    is Result.Success -> {
+                        showLoading(false)
+                        showToast(result.data.message)
+                        findNavController().navigate(R.id.action_navigation_add_story_to_navigation_home)
+                    }
 
-                is Result.Error -> {
-                    showLoading(false)
-                    showToast(result.error)
+                    is Result.Error -> {
+                        showLoading(false)
+                        showToast(result.error)
+                    }
                 }
             }
         }

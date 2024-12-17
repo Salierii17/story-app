@@ -29,7 +29,7 @@ class UserSessionManager @Inject constructor(
         }
     }
 
-    val user = context.dataStore.data.map { preferences ->
+    val user = dataStore.data.map { preferences ->
         val userId = preferences[USER_ID_KEY]
         val name = preferences[USER_NAME_KEY]
         val token = preferences[USER_TOKEN_KEY]

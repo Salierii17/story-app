@@ -1,14 +1,14 @@
 package com.example.storyapp.data.repository
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import com.example.storyapp.data.datastore.UserSessionManager
 import com.example.storyapp.data.api.ApiService
 import com.example.storyapp.data.model.ErrorResponse
 import com.example.storyapp.data.model.LoggedInUser
 import com.example.storyapp.utils.Result
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class AuthRepository @Inject constructor(
 
     fun register(
         name: String, email: String, password: String
-    ): LiveData<Result<String>> = liveData {
+    ): Flow<Result<String>> = flow {
         emit(Result.Loading)
         try {
             val message = apiService.register(name, email, password).message
@@ -40,7 +40,7 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    fun login(email: String, password: String): LiveData<Result<LoggedInUser>> = liveData {
+    fun login(email: String, password: String): Flow<Result<LoggedInUser>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.login(email, password).loginResult
