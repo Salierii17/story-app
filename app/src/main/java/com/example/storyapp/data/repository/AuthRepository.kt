@@ -11,22 +11,12 @@ import com.example.storyapp.utils.Result
 import com.google.gson.Gson
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class AuthRepository private constructor(
-    private val apiService: ApiService, private val loginDataSource: LoginDataSource
+class AuthRepository @Inject constructor(
+    private val apiService: ApiService,
+    private val loginDataSource: LoginDataSource
 ) {
-    companion object {
-
-        const val TAG = "AuthRepository"
-
-        @Volatile
-        private var instance: AuthRepository? = null
-        fun getInstance(
-            apiService: ApiService, loginDataSource: LoginDataSource
-        ): AuthRepository = instance ?: synchronized(this) {
-            instance ?: AuthRepository(apiService, loginDataSource)
-        }.also { instance = it }
-    }
 
     fun register(
         name: String, email: String, password: String
@@ -73,6 +63,11 @@ class AuthRepository private constructor(
     suspend fun saveUser(loggedInUser: LoggedInUser) = loginDataSource.saveUser(loggedInUser)
 
     suspend fun logout() = loginDataSource.logout()
+
+
+    companion object {
+        const val TAG = "AuthRepository"
+    }
 
 
 }

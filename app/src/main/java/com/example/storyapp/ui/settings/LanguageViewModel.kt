@@ -5,9 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.storyapp.data.repository.LanguageRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LanguageViewModel(private val repository: LanguageRepository) : ViewModel() {
+@HiltViewModel
+class LanguageViewModel @Inject constructor(
+    private val repository: LanguageRepository
+) : ViewModel() {
 
     private val _language = MutableLiveData<String>()
     val language: LiveData<String> get() = _language

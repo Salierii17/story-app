@@ -1,20 +1,11 @@
 package com.example.storyapp.data.repository
 
 import com.example.storyapp.utils.UserPreferences
+import javax.inject.Inject
 
-class LanguageRepository private constructor(
+class LanguageRepository @Inject constructor(
     private val userPreferences: UserPreferences
 ) {
-    companion object {
-
-        @Volatile
-        private var instance: LanguageRepository? = null
-        fun getInstance(
-            userPreferences: UserPreferences
-        ): LanguageRepository = instance ?: synchronized(this) {
-            instance ?: LanguageRepository(userPreferences)
-        }.also { instance = it }
-    }
 
     suspend fun getSavedLanguage(): String? {
         return userPreferences.getLanguage()

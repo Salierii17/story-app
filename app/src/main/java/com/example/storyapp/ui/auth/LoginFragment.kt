@@ -10,27 +10,27 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
 import com.example.storyapp.MainActivity
 import com.example.storyapp.R
-import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.databinding.FragmentLoginBinding
 import com.example.storyapp.utils.Result
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var authViewModel: AuthViewModel
+    private val authViewModel: AuthViewModel by viewModels()
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         sharedElementEnterTransition =
@@ -45,8 +45,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
         binding.btnLogin.setOnClickListener {
             val email = binding.edLoginEmail.text.toString()

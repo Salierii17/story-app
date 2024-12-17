@@ -10,11 +10,14 @@ import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.data.model.StoryResponse
 import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.utils.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
-class StoryViewModel(
+@HiltViewModel
+class StoryViewModel @Inject constructor(
     private val repository: StoryRepository,
     private val dataSource: LoginDataSource,
 ) : ViewModel() {

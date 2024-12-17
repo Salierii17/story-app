@@ -7,29 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.storyapp.R
-import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.databinding.FragmentDetailBinding
 import com.example.storyapp.utils.Result
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var storyViewModel: StoryViewModel
+    private val storyViewModel: StoryViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
-
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        storyViewModel = ViewModelProvider(this, factory)[StoryViewModel::class.java]
-
         return binding.root
     }
 

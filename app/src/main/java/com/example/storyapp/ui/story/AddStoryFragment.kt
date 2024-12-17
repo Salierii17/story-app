@@ -10,29 +10,27 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.storyapp.R
-import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.databinding.FragmentAddStoryBinding
 import com.example.storyapp.utils.Result
 import com.example.storyapp.utils.reduceFileImage
 import com.example.storyapp.utils.uriToFile
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddStoryFragment : Fragment() {
 
     private var _binding: FragmentAddStoryBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var storyViewModel: StoryViewModel
+    private val storyViewModel: StoryViewModel by viewModels()
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        storyViewModel = ViewModelProvider(this, factory)[StoryViewModel::class.java]
-
         _binding = FragmentAddStoryBinding.inflate(inflater, container, false)
 
         storyViewModel.imageUri.observe(viewLifecycleOwner) { uri ->

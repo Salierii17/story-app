@@ -15,22 +15,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import java.io.File
 import java.io.IOException
+import javax.inject.Inject
 
-class StoryRepository private constructor(
+class StoryRepository @Inject constructor(
     private val apiService: ApiService
 ) {
-    companion object {
-
-        const val TAG = "StoryRepository"
-
-        @Volatile
-        private var instance: StoryRepository? = null
-        fun getInstance(
-            apiService: ApiService,
-        ): StoryRepository = instance ?: synchronized(this) {
-            instance ?: StoryRepository(apiService)
-        }.also { instance = it }
-    }
 
     fun fetchStory(token: String): LiveData<Result<List<ListStoryItem>>> = liveData {
         emit(Result.Loading)
@@ -98,5 +87,8 @@ class StoryRepository private constructor(
         }
     }
 
+    companion object {
+        const val TAG = "StoryRepository"
+    }
 
 }

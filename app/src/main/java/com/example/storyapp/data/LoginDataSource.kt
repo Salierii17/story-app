@@ -5,13 +5,19 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.storyapp.data.model.LoggedInUser
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
 val Context.dataStore by preferencesDataStore(name = "user_prefs")
 
-class LoginDataSource(context: Context) {
+@Singleton
+class LoginDataSource @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
     private val dataStore = context.dataStore
 

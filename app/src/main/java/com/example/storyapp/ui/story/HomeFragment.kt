@@ -8,34 +8,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.StoryAdapter
-import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.databinding.FragmentHomeBinding
 import com.example.storyapp.ui.auth.AuthViewModel
 import com.example.storyapp.utils.Result
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var authViewModel: AuthViewModel
-    private lateinit var storyViewModel: StoryViewModel
+    private val authViewModel: AuthViewModel by viewModels()
+    private val storyViewModel: StoryViewModel by viewModels()
     private lateinit var storyAdapter: StoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
-        storyViewModel = ViewModelProvider(this, factory)[StoryViewModel::class.java]
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -43,7 +40,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         setupRecyclerView()
         setupObservers()

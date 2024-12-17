@@ -5,31 +5,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.example.storyapp.R
-import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.ui.auth.AuthActivity
 import com.example.storyapp.ui.auth.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+@AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {
 
-    private lateinit var authViewModel: AuthViewModel
-    private lateinit var languageViewModel: LanguageViewModel
+    private val authViewModel: AuthViewModel by viewModels()
+    private val languageViewModel: LanguageViewModel by viewModels()
     private var loadingDialog: AlertDialog? = null
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
-        languageViewModel = ViewModelProvider(this, factory)[LanguageViewModel::class.java]
-
 
         val languagePreference = findPreference<ListPreference>("language")
         languagePreference?.setOnPreferenceChangeListener { _, newValue ->

@@ -2,6 +2,7 @@ package com.example.storyapp
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -13,14 +14,17 @@ import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.auth.AuthActivity
 import com.example.storyapp.ui.settings.LanguageViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var languageViewModel: LanguageViewModel
+    private val languageViewModel: LanguageViewModel by viewModels()
     private lateinit var loginDataSource: LoginDataSource
 
     private lateinit var navController: NavController
@@ -30,9 +34,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-
-        val factory = ViewModelFactory.getInstance(this)
-        languageViewModel = ViewModelProvider(this, factory)[LanguageViewModel::class.java]
         loginDataSource = LoginDataSource(this)
 
         languageViewModel.language.observe(this) { languageCode ->

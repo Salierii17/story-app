@@ -9,18 +9,18 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.transition.TransitionInflater
-import com.example.storyapp.ViewModelFactory
 import com.example.storyapp.databinding.FragmentRegisterBinding
 import com.example.storyapp.utils.Result
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var authViewModel: AuthViewModel
-
+    private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -39,9 +39,6 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val factory = ViewModelFactory.getInstance(requireActivity())
-        authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
 
         binding.signupButton.setOnClickListener {
             val name = binding.edRegisterName.text.toString()
