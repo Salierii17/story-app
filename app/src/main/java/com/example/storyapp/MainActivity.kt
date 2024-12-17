@@ -2,10 +2,9 @@ package com.example.storyapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -13,7 +12,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.auth.AuthActivity
-import com.example.storyapp.ui.maps.MapsActivity
 import com.example.storyapp.ui.settings.LanguageViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,28 +67,7 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
-
-
         navView.setupWithNavController(navController)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_maps -> {
-                val intent = Intent(this, MapsActivity::class.java)
-                startActivity(intent)
-                true
-            }
-
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
-        }
     }
 
     private fun setLocale(languageCode: String) {
