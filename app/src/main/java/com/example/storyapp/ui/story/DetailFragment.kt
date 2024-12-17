@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.storyapp.R
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.databinding.FragmentDetailBinding
 import com.example.storyapp.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -44,23 +47,27 @@ class DetailFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        storyViewModel.storyDetail.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    showLoading(true)
-                }
+        lifecycleScope.launch {
 
-                is Result.Success -> {
-                    showLoading(false)
-                    val storyData = result.data
-                    Log.d("HomeFragment", "Fetched stories: $storyData")
+            storyViewModel.storyDetail.collectLatest { result ->
+                when (result) {
+                    is Result.Initial -> Unit
+                    is Result.Loading -> {
+                        showLoading(true)
+                    }
 
-                    setStoryDetailData(storyData)
-                }
+                    is Result.Success -> {
+                        showLoading(false)
+                        val storyData = result.data
+                        Log.d("HomeFragment", "Fetched stories: $storyData")
 
-                is Result.Error -> {
-                    showLoading(false)
-                    showToast("Error: ${result.error}")
+                        setStoryDetailData(storyData)
+                    }
+
+                    is Result.Error -> {
+                        showLoading(false)
+                        showToast("Error: ${result.error}")
+                    }
                 }
             }
         }

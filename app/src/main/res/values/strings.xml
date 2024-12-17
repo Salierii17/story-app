@@ -30,4 +30,10 @@
     <string name="success_login">Login Successfully</string>
     <string name="invalid_email">Please enter a valid email address (example@domain.com)</string>
     <string name="updating_language">Updating …</string>
+    <string name="title_maps">Maps</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satellite</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="hybrid_type">Hybrid</string>
 </resources>

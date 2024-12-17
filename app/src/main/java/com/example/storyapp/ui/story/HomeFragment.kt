@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,8 @@ import com.example.storyapp.databinding.FragmentHomeBinding
 import com.example.storyapp.ui.auth.AuthViewModel
 import com.example.storyapp.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -62,26 +65,30 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        storyViewModel.stories.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    showLoading(true)
-                    showPlaceholder(false)
-                }
+        lifecycleScope.launch {
 
-                is Result.Success -> {
-                    showLoading(false)
-                    showPlaceholder(false)
-                    val storyData = result.data
-                    Log.d("HomeFragment", "Fetched stories: $storyData")
-                    storyAdapter.submitList(storyData)
-                    showToast(getString(R.string.list_fetch_success))
-                }
+            storyViewModel.stories.collectLatest { result ->
+                when (result) {
+                    is Result.Initial -> Unit
+                    is Result.Loading -> {
+                        showLoading(true)
+                        showPlaceholder(false)
+                    }
 
-                is Result.Error -> {
-                    showLoading(false)
-                    showPlaceholder(true)
-                    showToast(result.error)
+                    is Result.Success -> {
+                        showLoading(false)
+                        showPlaceholder(false)
+                        val storyData = result.data
+                        Log.d("HomeFragment", "Fetched stories: $storyData")
+                        storyAdapter.submitList(storyData)
+                        showToast(getString(R.string.list_fetch_success))
+                    }
+
+                    is Result.Error -> {
+                        showLoading(false)
+                        showPlaceholder(true)
+                        showToast(result.error)
+                    }
                 }
             }
         }

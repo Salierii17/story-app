@@ -18,6 +18,7 @@ import com.example.storyapp.R
 import com.example.storyapp.databinding.FragmentLoginBinding
 import com.example.storyapp.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -45,14 +46,10 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        binding.btnLogin.setOnClickListener {
-            val email = binding.edLoginEmail.text.toString()
-            val password = binding.edLoginPassword.text.toString()
-
-            login(email, password)
-        }
         startAnimations()
+        setupObservers()
+
+        binding.btnLogin.setOnClickListener { login() }
     }
 
     private fun startAnimations() {
@@ -83,10 +80,11 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun login(email: String, password: String) {
-        authViewModel.login(email, password).observe(viewLifecycleOwner) { result ->
-            if (result != null) {
+    private fun setupObservers() {
+        lifecycleScope.launch {
+            authViewModel.loginState.collectLatest { result ->
                 when (result) {
+                    is Result.Initial -> Unit
                     is Result.Loading -> {
                         showLoading(true)
                     }
@@ -105,7 +103,6 @@ class LoginFragment : Fragment() {
                         intent.flags =
                             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
-
                     }
 
                     is Result.Error -> {
@@ -115,6 +112,13 @@ class LoginFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun login() {
+        val email = binding.edLoginEmail.text.toString()
+        val password = binding.edLoginPassword.text.toString()
+
+        authViewModel.login(email, password)
     }
 
     private fun showLoading(isLoading: Boolean) {

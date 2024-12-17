@@ -5,13 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.storyapp.data.LoginDataSource
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.data.model.StoryResponse
 import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -19,17 +20,16 @@ import javax.inject.Inject
 @HiltViewModel
 class StoryViewModel @Inject constructor(
     private val repository: StoryRepository,
-    private val dataSource: LoginDataSource,
 ) : ViewModel() {
 
-    private val _stories = MutableLiveData<Result<List<ListStoryItem>>>()
-    val stories: LiveData<Result<List<ListStoryItem>>> get() = _stories
+    private val _stories = MutableStateFlow<Result<List<ListStoryItem>>>(Result.Initial)
+    val stories = _stories.asStateFlow()
 
-    private val _addStory = MutableLiveData<Result<StoryResponse>>()
-    val addStory: LiveData<Result<StoryResponse>> get() = _addStory
+    private val _addStory = MutableStateFlow<Result<StoryResponse>>(Result.Initial)
+    val addStory = _addStory.asStateFlow()
 
-    private val _storyDetail = MutableLiveData<Result<ListStoryItem>>()
-    val storyDetail: LiveData<Result<ListStoryItem>> get() = _storyDetail
+    private val _storyDetail = MutableStateFlow<Result<ListStoryItem>>(Result.Initial)
+    val storyDetail = _storyDetail.asStateFlow()
 
     private val _imageUri = MutableLiveData<Uri?>()
     val imageUri: LiveData<Uri?> = _imageUri
@@ -37,51 +37,24 @@ class StoryViewModel @Inject constructor(
 
     fun fetchStory() {
         viewModelScope.launch {
-            val user = dataSource.user.firstOrNull()
-            if (user == null) {
-                _stories.postValue(Result.Error("User not logged in"))
-            } else {
-                repository.fetchStory(user.token).observeForever { response ->
-                    _stories.postValue(response)
-                }
+            repository.fetchStory().collectLatest { result ->
+                _stories.value = result
             }
         }
     }
 
     fun addStory(file: File, description: String) {
         viewModelScope.launch {
-            try {
-                val user = dataSource.user.firstOrNull()
-                if (user == null) {
-                    _addStory.postValue(Result.Error("User not logged in"))
-                } else {
-                    repository.addStory(user.token, file, description).observeForever { result ->
-                        _addStory.postValue(result)
-                    }
-                }
-            } catch (e: Exception) {
-                _stories.postValue(Result.Error("Error added story: ${e.localizedMessage}"))
+            repository.addStory(file, description).collectLatest { result ->
+                _addStory.value = result
             }
         }
     }
 
     fun fetchDetailStory(id: String) {
         viewModelScope.launch {
-            try {
-                val user = dataSource.user.firstOrNull()
-                if (user == null) {
-                    _storyDetail.postValue(Result.Error("User not logged in"))
-                } else {
-                    repository.fetchDetailStory(user.token, id).observeForever { result ->
-                        _storyDetail.postValue(result)
-                    }
-                }
-            } catch (e: Exception) {
-                _storyDetail.postValue(
-                    Result.Error(
-                        "Error fetch detail story: ${e.message.toString()}"
-                    )
-                )
+            repository.fetchDetailStory(id).collectLatest { result ->
+                _storyDetail.value = result
             }
         }
     }
