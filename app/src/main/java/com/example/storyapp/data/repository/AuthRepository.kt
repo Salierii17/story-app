@@ -3,7 +3,7 @@ package com.example.storyapp.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import com.example.storyapp.data.LoginDataSource
+import com.example.storyapp.data.datastore.UserSessionManager
 import com.example.storyapp.data.api.ApiService
 import com.example.storyapp.data.model.ErrorResponse
 import com.example.storyapp.data.model.LoggedInUser
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
     private val apiService: ApiService,
-    private val loginDataSource: LoginDataSource
+    private val userSessionManager: UserSessionManager
 ) {
 
     fun register(
@@ -49,7 +49,7 @@ class AuthRepository @Inject constructor(
                 name = response?.name.toString(),
                 token = response?.token.toString()
             )
-            loginDataSource.saveUser(user)
+            userSessionManager.saveUser(user)
             emit(Result.Success(user))
         } catch (e: IOException) {
             emit(Result.Error("No Internet Connection"))
@@ -60,9 +60,9 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun saveUser(loggedInUser: LoggedInUser) = loginDataSource.saveUser(loggedInUser)
+    suspend fun saveUser(loggedInUser: LoggedInUser) = userSessionManager.saveUser(loggedInUser)
 
-    suspend fun logout() = loginDataSource.logout()
+    suspend fun logout() = userSessionManager.logout()
 
 
     companion object {

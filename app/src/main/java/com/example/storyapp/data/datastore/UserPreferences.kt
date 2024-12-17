@@ -1,4 +1,4 @@
-package com.example.storyapp.utils
+package com.example.storyapp.data.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 
 @Singleton
@@ -19,7 +19,7 @@ class UserPreferences @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    private val dataStore: DataStore<Preferences> = context.dataStore
+    private val dataStore = context.settingsDataStore
 
     suspend fun saveLanguage(languageCode: String) {
         dataStore.edit { preferences ->

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.storyapp.data.LoginDataSource
+import com.example.storyapp.data.datastore.UserSessionManager
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.data.model.StoryResponse
 import com.example.storyapp.data.repository.StoryRepository
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StoryViewModel @Inject constructor(
     private val repository: StoryRepository,
-    private val dataSource: LoginDataSource,
+    private val dataSource: UserSessionManager,
 ) : ViewModel() {
 
     private val _stories = MutableLiveData<Result<List<ListStoryItem>>>()

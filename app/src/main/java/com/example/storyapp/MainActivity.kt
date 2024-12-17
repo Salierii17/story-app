@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.storyapp.data.LoginDataSource
+import com.example.storyapp.data.datastore.UserSessionManager
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.auth.AuthActivity
 import com.example.storyapp.ui.maps.MapsActivity
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val languageViewModel: LanguageViewModel by viewModels()
-    private lateinit var loginDataSource: LoginDataSource
+    private lateinit var userSessionManager: UserSessionManager
 
     private lateinit var navController: NavController
 
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-        loginDataSource = LoginDataSource(this)
+        userSessionManager = UserSessionManager(this)
 
         languageViewModel.language.observe(this) { languageCode ->
             setLocale(languageCode)
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
 
         lifecycleScope.launch {
-            val isLoggedIn = loginDataSource.isLoggedIn()
+            val isLoggedIn = userSessionManager.isLoggedIn()
             if (!isLoggedIn) {
                 val intent = Intent(this@MainActivity, AuthActivity::class.java)
                 startActivity(intent)
