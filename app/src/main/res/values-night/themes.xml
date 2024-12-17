@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.StoryApp" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.StoryApp" parent="Theme.Material3.Dark">
         <item name="colorPrimary">@color/nt_theme_primary</item>
         <item name="colorOnPrimary">@color/nt_theme_onPrimary</item>
         <item name="colorSecondary">@color/nt_theme_secondary</item>
