@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.dagger.hilt.android)
     id("kotlin-parcelize")
     id("kotlin-kapt")
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 
 }
 
@@ -55,11 +56,12 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.preference)
+    implementation(libs.play.services.maps)
     testImplementation(libs.junit)
     implementation(libs.androidx.fragment.ktx)
 
 
-// Android Jetpack components
+    // Android Jetpack components
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
@@ -73,31 +75,33 @@ dependencies {
     implementation(libs.androidx.recyclerview)
 
 
-// Retrofit for API calls
+    // Retrofit for API calls
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
 
-// OkHttp for HTTP client
+    // OkHttp for HTTP client
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
 
-// Gson for JSON parsing
+    // Gson for JSON parsing
     implementation(libs.gson)
 
-// Glide for image loading
+    // Glide for image loading
     implementation(libs.glide)
 
-// Coroutines
+    // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
-// CameraX
+    // CameraX
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
 
-
     // Dependency Injection
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    // Google Maps
+    implementation(libs.play.services.maps)
 
 }
