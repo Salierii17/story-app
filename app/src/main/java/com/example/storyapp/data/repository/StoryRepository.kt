@@ -95,6 +95,28 @@ class StoryRepository @Inject constructor(
         }
     }
 
+    fun getStoriesWithLocation(): Flow<Result<List<ListStoryItem>>> = flow {
+        emit(Result.Loading)
+        try {
+            val token = getToken() ?: throw Exception("Token not found")
+            val bearerToken = "Bearer $token"
+            val message = apiService.getStoriesWithLocation(bearerToken).listStory
+            emit(Result.Success(message))
+        } catch (e: HttpException) {
+            val jsonInString = e.response()?.errorBody()?.string()
+            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+            val errorMessage = errorBody.message
+            emit(Result.Error(errorMessage.toString()))
+            Log.e(TAG, "fetchStory: $errorMessage")
+        } catch (e: IOException) {
+            emit(Result.Error("No Internet Connection"))
+            Log.e(TAG, "FetchStory : ${e.localizedMessage}")
+        } catch (e: Exception) {
+            emit(Result.Error("Unexpected error: ${e.localizedMessage}"))
+            Log.e(TAG, "fetchStory: Unexpected error", e)
+        }
+    }
+
     private suspend fun getToken(): String? {
         val token = userSessionManager.user.firstOrNull()?.token
         Log.d(TAG, "Retrieved Token: $token")
