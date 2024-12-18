@@ -27,9 +27,7 @@ class StoryRepository @Inject constructor(
     fun fetchStory(): Flow<Result<List<ListStoryItem>>> = flow {
         emit(Result.Loading)
         try {
-            val token = getToken() ?: throw Exception("Token not found")
-            val bearerToken = "Bearer $token"
-            val message = apiService.getStories(bearerToken).listStory
+            val message = apiService.getStories().listStory
             emit(Result.Success(message))
         } catch (e: HttpException) {
             val jsonInString = e.response()?.errorBody()?.string()
@@ -116,6 +114,16 @@ class StoryRepository @Inject constructor(
             Log.e(TAG, "fetchStory: Unexpected error", e)
         }
     }
+
+//    fun getItemStream(): Flow<PagingData<ListStoryItem>> {
+//        return Pager(
+//            config = PagingConfig(
+//                pageSize = 20,
+//                enablePlaceholders = false
+//            ),
+//            pagingSourceFactory = { Stit(apiService) }
+//        ).flow
+//    }
 
     private suspend fun getToken(): String? {
         val token = userSessionManager.user.firstOrNull()?.token

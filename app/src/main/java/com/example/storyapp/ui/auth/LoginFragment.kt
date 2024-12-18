@@ -13,13 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
-import com.example.storyapp.MainActivity
+import com.example.storyapp.ui.MainActivity
 import com.example.storyapp.R
+import com.example.storyapp.data.datastore.TokenManager
 import com.example.storyapp.databinding.FragmentLoginBinding
 import com.example.storyapp.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -27,6 +29,9 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val authViewModel: AuthViewModel by viewModels()
+
+    @Inject
+    lateinit var tokenManager: TokenManager
 
 
     override fun onCreateView(
@@ -93,9 +98,8 @@ class LoginFragment : Fragment() {
                         showLoading(false)
                         val user = result.data
                         showToast(getString(R.string.success_login))
-
                         lifecycleScope.launch {
-                            authViewModel.saveUser(user)
+                            authViewModel.saveToken(user.token)
                         }
 
                         // Navigate to MainActivity

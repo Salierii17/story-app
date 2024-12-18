@@ -30,6 +30,7 @@ annotation = "1.9.1"
 loggingInterceptor = "4.12.0"
 preference = "1.2.1"
 ksp = "1.9.24-1.0.20"
+pagingRuntimeKtx = "3.1.0"
 
 
 [libraries]
@@ -64,6 +65,8 @@ androidx-annotation = { group = "androidx.annotation", name = "annotation", vers
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

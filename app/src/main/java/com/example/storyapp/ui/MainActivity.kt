@@ -1,4 +1,4 @@
-package com.example.storyapp
+package com.example.storyapp.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,15 +10,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.storyapp.data.datastore.UserSessionManager
+import com.example.storyapp.R
+import com.example.storyapp.data.datastore.TokenManager
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.auth.AuthActivity
+import com.example.storyapp.ui.auth.AuthViewModel
 import com.example.storyapp.ui.maps.MapsActivity
 import com.example.storyapp.ui.settings.LanguageViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -27,16 +31,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val languageViewModel: LanguageViewModel by viewModels()
-    private lateinit var userSessionManager: UserSessionManager
 
     private lateinit var navController: NavController
+
+    private val authViewModel: AuthViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        userSessionManager = UserSessionManager(this)
 
         languageViewModel.language.observe(this) { languageCode ->
             setLocale(languageCode)
@@ -47,20 +51,23 @@ class MainActivity : AppCompatActivity() {
             setLocale(savedLanguage)
         }
 
-
         lifecycleScope.launch {
-            val isLoggedIn = userSessionManager.isLoggedIn()
-            if (!isLoggedIn) {
-                val intent = Intent(this@MainActivity, AuthActivity::class.java)
-                startActivity(intent)
-                finish()
-                return@launch
-            } else {
-                setupUI()
+            authViewModel.isUserLoggedIn.collectLatest { isLoggedIn ->
+                when (isLoggedIn) {
+                    true -> setupUI()
+                    false -> navigateToAuthActivity()
+                    null -> {} // Wait for Flow to emit a value
+                }
             }
         }
 
         setContentView(binding.root)
+    }
+
+    private fun navigateToAuthActivity() {
+        val intent = Intent(this@MainActivity, AuthActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

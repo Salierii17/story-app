@@ -7,6 +7,7 @@ import com.example.storyapp.data.repository.AuthRepository
 import com.example.storyapp.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -20,6 +21,21 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
 
     val _loginState = MutableStateFlow<Result<LoggedInUser>>(Result.Initial)
     var loginState = _loginState.asStateFlow()
+
+    private val _isUserLoggedIn = MutableStateFlow<Boolean?>(null)
+    val isUserLoggedIn: StateFlow<Boolean?> = _isUserLoggedIn
+
+    init {
+        checkLoginStatus()
+    }
+
+    private fun checkLoginStatus() {
+        viewModelScope.launch {
+            authRepository.isUserLoggedIn.collectLatest { isLoggedIn ->
+                _isUserLoggedIn.value = isLoggedIn
+            }
+        }
+    }
 
 
     fun register(name: String, email: String, password: String) {
@@ -38,15 +54,22 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
         }
     }
 
-    fun saveUser(loggedInUser: LoggedInUser) {
-        viewModelScope.launch {
-            authRepository.saveUser(loggedInUser)
-        }
-    }
+//    fun saveUser(loggedInUser: LoggedInUser) {
+//        viewModelScope.launch {
+//            authRepository.saveUser(loggedInUser)
+//        }
+//    }
+
 
     fun logout() {
         viewModelScope.launch {
             authRepository.logout()
+        }
+    }
+
+    fun saveToken(token: String) {
+        viewModelScope.launch {
+            authRepository.saveToken(token)
         }
     }
 

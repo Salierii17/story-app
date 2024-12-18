@@ -2,6 +2,7 @@ package com.example.storyapp.ui.maps
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.utils.Result
@@ -19,6 +20,8 @@ class MapsViewModel @Inject constructor(
 
     private val _storiesMaps = MutableStateFlow<Result<List<ListStoryItem>>>(Result.Initial)
     val storiesMaps = _storiesMaps.asStateFlow()
+
+//    val items = storyRepository.getItemStream().cachedIn(viewModelScope)
 
     fun getStoriesWithLocation() {
         viewModelScope.launch {

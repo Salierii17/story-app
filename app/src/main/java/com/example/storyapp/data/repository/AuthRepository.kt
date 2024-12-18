@@ -1,8 +1,9 @@
 package com.example.storyapp.data.repository
 
 import android.util.Log
-import com.example.storyapp.data.datastore.UserSessionManager
 import com.example.storyapp.data.api.ApiService
+import com.example.storyapp.data.datastore.TokenManager
+import com.example.storyapp.data.datastore.UserSessionManager
 import com.example.storyapp.data.model.ErrorResponse
 import com.example.storyapp.data.model.LoggedInUser
 import com.example.storyapp.utils.Result
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
     private val apiService: ApiService,
-    private val userSessionManager: UserSessionManager
+    private val userSessionManager: UserSessionManager,
+    private val tokenManager: TokenManager
 ) {
 
     fun register(
@@ -60,9 +62,15 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun saveUser(loggedInUser: LoggedInUser) = userSessionManager.saveUser(loggedInUser)
+//    suspend fun saveUser(loggedInUser: LoggedInUser) = userSessionManager.saveUser(loggedInUser)
 
-    suspend fun logout() = userSessionManager.logout()
+    val isUserLoggedIn: Flow<Boolean> = flow {
+        emit(!tokenManager.getToken().isNullOrEmpty())
+    }
+
+    suspend fun saveToken(token: String) = tokenManager.saveToken(token)
+
+    suspend fun logout() = tokenManager.clearToken()
 
 
     companion object {
