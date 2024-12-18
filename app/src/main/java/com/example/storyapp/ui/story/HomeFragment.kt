@@ -45,7 +45,11 @@ class HomeFragment : Fragment() {
         setupRecyclerView()
         setupObservers()
 
-        storyAdapter.retry()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        storyViewModel.refreshPagingData()
     }
 
     private fun setupRecyclerView() {
@@ -67,7 +71,6 @@ class HomeFragment : Fragment() {
 
             showLoading(isLoading)
             showPlaceholder(isEmpty)
-            showToast(getString(R.string.list_fetch_success))
         }
 
         binding.rvAllStories.adapter = storyAdapter.withLoadStateFooter(
@@ -83,7 +86,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
 
     private fun navigateToStoryDetail(storyItem: ListStoryItem) {
         val bundle = Bundle().apply {

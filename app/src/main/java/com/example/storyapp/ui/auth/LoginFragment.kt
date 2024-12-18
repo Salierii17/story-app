@@ -13,10 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.TransitionInflater
-import com.example.storyapp.ui.MainActivity
 import com.example.storyapp.R
 import com.example.storyapp.data.datastore.TokenManager
 import com.example.storyapp.databinding.FragmentLoginBinding
+import com.example.storyapp.ui.MainActivity
 import com.example.storyapp.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -95,12 +95,7 @@ class LoginFragment : Fragment() {
                     is Result.Success -> {
                         showLoading(false)
                         showToast(getString(R.string.success_login))
-
-                        // Navigate to MainActivity
-                        val intent = Intent(context, MainActivity::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
+                        navigateToMainActivity()
                     }
 
                     is Result.Error -> {
@@ -117,6 +112,13 @@ class LoginFragment : Fragment() {
         val password = binding.edLoginPassword.text.toString()
 
         authViewModel.login(email, password)
+    }
+
+    private fun navigateToMainActivity() {
+        val intent = Intent(context, MainActivity::class.java)
+        intent.flags =
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     private fun showLoading(isLoading: Boolean) {

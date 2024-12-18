@@ -25,23 +25,41 @@ class StoryRepository @Inject constructor(
     private val apiService: ApiService,
 ) {
 
-    private var currentPagingSource: StoryPagingSource? = null
-
     fun getStory(): Flow<PagingData<ListStoryItem>> {
         return Pager(config = PagingConfig(
-            pageSize = 5,
+            pageSize = 5, enablePlaceholders = false
         ), pagingSourceFactory = {
-            StoryPagingSource(apiService).also {
-                currentPagingSource = it
-            }
+            StoryPagingSource(apiService)
         }).flow
     }
 
-    fun invalidatePagingSource() {
-        currentPagingSource?.invalidate()
+    fun addStory(imageFile: File, description: String) = flow {
+        emit(Result.Loading)
+        val requestBody = description.toRequestBody("text/plain".toMediaType())
+        val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+        val multipartBody = MultipartBody.Part.createFormData(
+            "photo", imageFile.name, requestImageFile
+        )
+        Log.d(TAG, "MultipartBody created with file name: ${imageFile.name}")
+        try {
+            val message = apiService.addStory(multipartBody, requestBody)
+            emit(Result.Success(message))
+        } catch (e: HttpException) {
+            val jsonInString = e.response()?.errorBody()?.string()
+            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+            val errorMessage = errorBody.message
+            emit(Result.Error(errorMessage.toString()))
+            Log.e(TAG, "addStory : $errorMessage")
+        } catch (e: IOException) {
+            emit(Result.Error("No Internet Connection"))
+            Log.e(TAG, "addStory : ${e.localizedMessage}")
+        } catch (e: Exception) {
+            emit(Result.Error("Unexpected error: ${e.localizedMessage}"))
+            Log.e(TAG, "addStory: Unexpected error", e)
+        }
     }
 
-    fun fetchDetailStory(id: String): Flow<Result<ListStoryItem>> = flow {
+    fun getDetailStory(id: String): Flow<Result<ListStoryItem>> = flow {
         emit(Result.Loading)
         try {
             val message = apiService.getDetailStoriesDetail(id).story
@@ -58,31 +76,6 @@ class StoryRepository @Inject constructor(
         } catch (e: Exception) {
             emit(Result.Error("Unexpected error: ${e.localizedMessage}"))
             Log.e(TAG, "fetchDetailStory: Unexpected error", e)
-        }
-    }
-
-    fun addStory(imageFile: File, description: String) = flow {
-        emit(Result.Loading)
-        val requestBody = description.toRequestBody("text/plain".toMediaType())
-        val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
-        val multipartBody = MultipartBody.Part.createFormData(
-            "photo", imageFile.name, requestImageFile
-        )
-        try {
-            val message = apiService.addStory(multipartBody, requestBody)
-            emit(Result.Success(message))
-        } catch (e: HttpException) {
-            val jsonInString = e.response()?.errorBody()?.string()
-            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
-            val errorMessage = errorBody.message
-            emit(Result.Error(errorMessage.toString()))
-            Log.e(TAG, "addStory : $errorMessage")
-        } catch (e: IOException) {
-            emit(Result.Error("No Internet Connection"))
-            Log.e(TAG, "addStory : ${e.localizedMessage}")
-        } catch (e: Exception) {
-            emit(Result.Error("Unexpected error: ${e.localizedMessage}"))
-            Log.e(TAG, "addStory: Unexpected error", e)
         }
     }
 

@@ -52,6 +52,7 @@ class AuthRepository @Inject constructor(
                 token = response?.token.toString()
             )
             tokenManager.saveToken(user.token)
+
             emit(Result.Success(user))
         } catch (e: IOException) {
             emit(Result.Error("No Internet Connection"))

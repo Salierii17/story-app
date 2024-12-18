@@ -16,8 +16,10 @@ class StoryPagingSource @Inject constructor(
             val responseData = apiService.getStories(page, params.loadSize)
             val listStories = responseData.listStory
 
+            val sortedStories = listStories.sortedByDescending { it.createdAt }
+
             LoadResult.Page(
-                data = listStories,
+                data = sortedStories,
                 prevKey = if (page == INITIAL_PAGE_INDEX) null else page - 1,
                 nextKey = if (listStories.isEmpty()) null else page + 1
             )
