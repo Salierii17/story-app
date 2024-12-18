@@ -98,9 +98,9 @@ class LoginFragment : Fragment() {
                         showLoading(false)
                         val user = result.data
                         showToast(getString(R.string.success_login))
-                        lifecycleScope.launch {
-                            authViewModel.saveToken(user.token)
-                        }
+//                        lifecycleScope.launch {
+//                            authViewModel.saveToken(user.token)
+//                        }
 
                         // Navigate to MainActivity
                         val intent = Intent(context, MainActivity::class.java)

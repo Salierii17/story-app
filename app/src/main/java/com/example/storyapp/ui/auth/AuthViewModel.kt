@@ -19,7 +19,7 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     private val _registerState = MutableStateFlow<Result<String>>(Result.Initial)
     var registerState = _registerState.asStateFlow()
 
-    val _loginState = MutableStateFlow<Result<LoggedInUser>>(Result.Initial)
+    private val _loginState = MutableStateFlow<Result<LoggedInUser>>(Result.Initial)
     var loginState = _loginState.asStateFlow()
 
     private val _isUserLoggedIn = MutableStateFlow<Boolean?>(null)
@@ -54,22 +54,9 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
         }
     }
 
-//    fun saveUser(loggedInUser: LoggedInUser) {
-//        viewModelScope.launch {
-//            authRepository.saveUser(loggedInUser)
-//        }
-//    }
-
-
     fun logout() {
         viewModelScope.launch {
             authRepository.logout()
-        }
-    }
-
-    fun saveToken(token: String) {
-        viewModelScope.launch {
-            authRepository.saveToken(token)
         }
     }
 

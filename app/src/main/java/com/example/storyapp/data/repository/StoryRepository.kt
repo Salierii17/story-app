@@ -1,14 +1,16 @@
 package com.example.storyapp.data.repository
 
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.storyapp.data.StoryPagingSource
 import com.example.storyapp.data.api.ApiService
-import com.example.storyapp.data.datastore.UserSessionManager
 import com.example.storyapp.data.model.ErrorResponse
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.utils.Result
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -21,35 +23,29 @@ import javax.inject.Inject
 
 class StoryRepository @Inject constructor(
     private val apiService: ApiService,
-    private val userSessionManager: UserSessionManager
 ) {
 
-    fun fetchStory(): Flow<Result<List<ListStoryItem>>> = flow {
-        emit(Result.Loading)
-        try {
-            val message = apiService.getStories().listStory
-            emit(Result.Success(message))
-        } catch (e: HttpException) {
-            val jsonInString = e.response()?.errorBody()?.string()
-            val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
-            val errorMessage = errorBody.message
-            emit(Result.Error(errorMessage.toString()))
-            Log.e(TAG, "fetchStory: $errorMessage")
-        } catch (e: IOException) {
-            emit(Result.Error("No Internet Connection"))
-            Log.e(TAG, "FetchStory : ${e.localizedMessage}")
-        } catch (e: Exception) {
-            emit(Result.Error("Unexpected error: ${e.localizedMessage}"))
-            Log.e(TAG, "fetchStory: Unexpected error", e)
-        }
+    private var currentPagingSource: StoryPagingSource? = null
+
+
+    fun getStory(): Flow<PagingData<ListStoryItem>> {
+        return Pager(config = PagingConfig(
+            pageSize = 5,
+        ), pagingSourceFactory = {
+            StoryPagingSource(apiService).also {
+                currentPagingSource = it
+            }
+        }).flow
+    }
+
+    fun invalidatePagingSource() {
+        currentPagingSource?.invalidate()
     }
 
     fun fetchDetailStory(id: String): Flow<Result<ListStoryItem>> = flow {
         emit(Result.Loading)
         try {
-            val token = getToken() ?: throw Exception("Token not found")
-            val bearerToken = "Bearer $token"
-            val message = apiService.getDetailStoriesDetail(bearerToken, id).story
+            val message = apiService.getDetailStoriesDetail(id).story
             emit(Result.Success(message))
         } catch (e: HttpException) {
             val jsonInString = e.response()?.errorBody()?.string()
@@ -68,15 +64,13 @@ class StoryRepository @Inject constructor(
 
     fun addStory(imageFile: File, description: String) = flow {
         emit(Result.Loading)
-        val token = getToken() ?: throw Exception("Token not found")
-        val bearerToken = "Bearer $token"
         val requestBody = description.toRequestBody("text/plain".toMediaType())
         val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
         val multipartBody = MultipartBody.Part.createFormData(
             "photo", imageFile.name, requestImageFile
         )
         try {
-            val message = apiService.addStory(bearerToken, multipartBody, requestBody)
+            val message = apiService.addStory(multipartBody, requestBody)
             emit(Result.Success(message))
         } catch (e: HttpException) {
             val jsonInString = e.response()?.errorBody()?.string()
@@ -96,9 +90,7 @@ class StoryRepository @Inject constructor(
     fun getStoriesWithLocation(): Flow<Result<List<ListStoryItem>>> = flow {
         emit(Result.Loading)
         try {
-            val token = getToken() ?: throw Exception("Token not found")
-            val bearerToken = "Bearer $token"
-            val message = apiService.getStoriesWithLocation(bearerToken).listStory
+            val message = apiService.getStoriesWithLocation().listStory
             emit(Result.Success(message))
         } catch (e: HttpException) {
             val jsonInString = e.response()?.errorBody()?.string()
@@ -115,21 +107,6 @@ class StoryRepository @Inject constructor(
         }
     }
 
-//    fun getItemStream(): Flow<PagingData<ListStoryItem>> {
-//        return Pager(
-//            config = PagingConfig(
-//                pageSize = 20,
-//                enablePlaceholders = false
-//            ),
-//            pagingSourceFactory = { Stit(apiService) }
-//        ).flow
-//    }
-
-    private suspend fun getToken(): String? {
-        val token = userSessionManager.user.firstOrNull()?.token
-        Log.d(TAG, "Retrieved Token: $token")
-        return token
-    }
 
     companion object {
         const val TAG = "StoryRepository"

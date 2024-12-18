@@ -1,4 +1,4 @@
-package com.example.storyapp
+package com.example.storyapp.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.storyapp.R
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.databinding.ItemStoryBinding
 

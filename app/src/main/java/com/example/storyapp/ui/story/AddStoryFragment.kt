@@ -30,7 +30,6 @@ class AddStoryFragment : Fragment() {
 
     private val storyViewModel: StoryViewModel by viewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -52,7 +51,6 @@ class AddStoryFragment : Fragment() {
 
         binding.buttonChoosePicture.setOnClickListener { startGallery() }
         binding.buttonAdd.setOnClickListener { submitStory() }
-
     }
 
     private fun setupObservers() {
@@ -76,10 +74,6 @@ class AddStoryFragment : Fragment() {
         }
     }
 
-    private fun startGallery() {
-        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    }
-
     private val launcherGallery = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
@@ -88,6 +82,10 @@ class AddStoryFragment : Fragment() {
         } else {
             Log.d("Photo Picker", "No media selected")
         }
+    }
+
+    private fun startGallery() {
+        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
     private fun showImage(uri: Uri) {

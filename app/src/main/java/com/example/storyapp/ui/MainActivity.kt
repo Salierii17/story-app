@@ -11,7 +11,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.storyapp.R
-import com.example.storyapp.data.datastore.TokenManager
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.auth.AuthActivity
 import com.example.storyapp.ui.auth.AuthViewModel
@@ -22,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
