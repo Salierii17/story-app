@@ -42,8 +42,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
 
@@ -54,7 +53,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         setMapStyle()
         observeStoryMaps()
-        mapsViewModel.getStoriesWithLocation()
 
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isIndoorLevelPickerEnabled = true
@@ -63,13 +61,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val dicodingSpace = LatLng(-6.8957643, 107.6338462)
         mMap.addMarker(
-            MarkerOptions()
-                .position(dicodingSpace)
-                .title("Dicoding Space")
+            MarkerOptions().position(dicodingSpace).title("Dicoding Space")
                 .snippet("Batik Kumeli No.50")
         )
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dicodingSpace, 15f))
 
+        mapsViewModel.getStoriesWithLocation()
     }
 
     private fun observeStoryMaps() {
@@ -145,10 +142,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (lat != null && lon != null) {
                 val position = LatLng(lat, lon)
                 mMap.addMarker(
-                    MarkerOptions()
-                        .position(position)
-                        .title(data.name)
-                        .snippet(data.description)
+                    MarkerOptions().position(position).title(data.name).snippet(data.description)
                 )
                 boundsBuilder.include(position)
             }
@@ -176,6 +170,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
         private const val TAG = "MapsActivity"
     }
-
-
 }

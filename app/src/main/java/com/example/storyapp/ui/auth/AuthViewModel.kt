@@ -37,7 +37,6 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
         }
     }
 
-
     fun register(name: String, email: String, password: String) {
         viewModelScope.launch {
             authRepository.register(name, email, password).collectLatest { result ->
@@ -59,5 +58,4 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
             authRepository.logout()
         }
     }
-
 }

@@ -18,7 +18,6 @@ val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(na
 class UserPreferences @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-
     private val dataStore = context.settingsDataStore
 
     suspend fun saveLanguage(languageCode: String) {

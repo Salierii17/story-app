@@ -36,8 +36,6 @@ class StoryViewModel @Inject constructor(
     private val _imageUri = MutableLiveData<Uri?>()
     val imageUri: LiveData<Uri?> = _imageUri
 
-
-
     fun addStory(file: File, description: String) {
         viewModelScope.launch {
             repository.addStory(file, description).collectLatest { result ->
@@ -60,5 +58,4 @@ class StoryViewModel @Inject constructor(
     fun setImageUri(uri: Uri?) {
         _imageUri.value = uri
     }
-
 }

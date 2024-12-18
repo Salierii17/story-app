@@ -33,8 +33,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -54,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                 when (isLoggedIn) {
                     true -> setupUI()
                     false -> navigateToAuthActivity()
-                    null -> {} // Wait for Flow to emit a value
+                    null -> {}
                 }
             }
         }
@@ -86,7 +84,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun setupUI() {
         val navView: BottomNavigationView = binding.navView

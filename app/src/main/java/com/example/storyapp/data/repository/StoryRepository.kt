@@ -27,7 +27,6 @@ class StoryRepository @Inject constructor(
 
     private var currentPagingSource: StoryPagingSource? = null
 
-
     fun getStory(): Flow<PagingData<ListStoryItem>> {
         return Pager(config = PagingConfig(
             pageSize = 5,
@@ -38,9 +37,9 @@ class StoryRepository @Inject constructor(
         }).flow
     }
 
-        fun invalidatePagingSource() {
-            currentPagingSource?.invalidate()
-        }
+    fun invalidatePagingSource() {
+        currentPagingSource?.invalidate()
+    }
 
     fun fetchDetailStory(id: String): Flow<Result<ListStoryItem>> = flow {
         emit(Result.Loading)
@@ -107,9 +106,7 @@ class StoryRepository @Inject constructor(
         }
     }
 
-
     companion object {
         const val TAG = "StoryRepository"
     }
-
 }

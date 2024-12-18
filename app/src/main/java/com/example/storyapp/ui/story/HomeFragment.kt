@@ -48,7 +48,6 @@ class HomeFragment : Fragment() {
         storyAdapter.retry()
     }
 
-
     private fun setupRecyclerView() {
         val layoutManager =
             if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -68,10 +67,12 @@ class HomeFragment : Fragment() {
 
             showLoading(isLoading)
             showPlaceholder(isEmpty)
+            showToast(getString(R.string.list_fetch_success))
         }
 
         binding.rvAllStories.adapter = storyAdapter.withLoadStateFooter(
             footer = LoadingStateAdapter { storyAdapter.retry() }
+
         )
     }
 
@@ -79,7 +80,6 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             storyViewModel.stories.collectLatest { pagingData ->
                 storyAdapter.submitData(pagingData)
-                showToast(getString(R.string.list_fetch_success))
             }
         }
     }
@@ -103,7 +103,6 @@ class HomeFragment : Fragment() {
     private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -33,7 +33,6 @@ class LoginFragment : Fragment() {
     @Inject
     lateinit var tokenManager: TokenManager
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -41,7 +40,6 @@ class LoginFragment : Fragment() {
 
         sharedElementEnterTransition =
             TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
-
         sharedElementReturnTransition =
             TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
 
@@ -96,11 +94,7 @@ class LoginFragment : Fragment() {
 
                     is Result.Success -> {
                         showLoading(false)
-                        val user = result.data
                         showToast(getString(R.string.success_login))
-//                        lifecycleScope.launch {
-//                            authViewModel.saveToken(user.token)
-//                        }
 
                         // Navigate to MainActivity
                         val intent = Intent(context, MainActivity::class.java)

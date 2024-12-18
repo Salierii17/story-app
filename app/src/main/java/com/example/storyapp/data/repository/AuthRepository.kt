@@ -40,7 +40,9 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    fun login(email: String, password: String): Flow<Result<LoggedInUser>> = flow {
+    fun login(
+        email: String, password: String
+    ): Flow<Result<LoggedInUser>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.login(email, password).loginResult
@@ -66,10 +68,7 @@ class AuthRepository @Inject constructor(
 
     suspend fun logout() = tokenManager.clearToken()
 
-
     companion object {
         const val TAG = "AuthRepository"
     }
-
-
 }

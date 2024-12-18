@@ -16,7 +16,6 @@ private val Context.tokenDataStore: DataStore<Preferences> by preferencesDataSto
 class TokenManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-
     private val dataStore = context.tokenDataStore
 
     suspend fun saveToken(token: String) {
@@ -37,8 +36,7 @@ class TokenManager @Inject constructor(
     }
 
     companion object {
-        private val TOKEN_KEY = stringPreferencesKey("user_token")
-
         const val TAG = "Token Manager"
+        private val TOKEN_KEY = stringPreferencesKey("user_token")
     }
 }

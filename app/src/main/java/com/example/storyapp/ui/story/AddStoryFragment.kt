@@ -18,9 +18,11 @@ import com.example.storyapp.databinding.FragmentAddStoryBinding
 import com.example.storyapp.utils.Result
 import com.example.storyapp.utils.reduceFileImage
 import com.example.storyapp.utils.uriToFile
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class AddStoryFragment : Fragment() {
 
     private var _binding: FragmentAddStoryBinding? = null
@@ -111,5 +113,4 @@ class AddStoryFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

@@ -28,12 +28,10 @@ class RegisterFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
 
         sharedElementEnterTransition =
             TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
-
         sharedElementReturnTransition =
             TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
 
@@ -47,7 +45,6 @@ class RegisterFragment : Fragment() {
         setupObservers()
 
         binding.signupButton.setOnClickListener { registerUser() }
-
     }
 
     private fun startAnimations() {
@@ -93,7 +90,6 @@ class RegisterFragment : Fragment() {
 
     private fun setupObservers() {
         lifecycleScope.launch {
-
             authViewModel.registerState.collectLatest { result ->
                 when (result) {
                     is Result.Initial -> Unit
