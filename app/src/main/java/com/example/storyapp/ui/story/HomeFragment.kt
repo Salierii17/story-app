@@ -79,6 +79,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             storyViewModel.stories.collectLatest { pagingData ->
                 storyAdapter.submitData(pagingData)
+                showToast(getString(R.string.list_fetch_success))
             }
         }
     }

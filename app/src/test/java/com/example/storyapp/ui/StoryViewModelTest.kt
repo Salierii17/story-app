@@ -1,6 +1,5 @@
 package com.example.storyapp.ui
 
-import androidx.lifecycle.LiveData
 import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
@@ -14,6 +13,7 @@ import com.example.storyapp.data.repository.StoryRepository
 import com.example.storyapp.ui.story.StoryViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -85,12 +85,12 @@ class StoryViewModelTest {
         }
     }
 
-    class StoryPagingSource : PagingSource<Int, LiveData<List<ListStoryItem>>>() {
-        override fun getRefreshKey(state: PagingState<Int, LiveData<List<ListStoryItem>>>): Int {
+    class StoryPagingSource : PagingSource<Int, Flow<List<ListStoryItem>>>() {
+        override fun getRefreshKey(state: PagingState<Int, Flow<List<ListStoryItem>>>): Int {
             return 0
         }
 
-        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LiveData<List<ListStoryItem>>> {
+        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Flow<List<ListStoryItem>>> {
             return LoadResult.Page(emptyList(), 0, 1)
         }
 

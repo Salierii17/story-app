@@ -19,7 +19,7 @@ class StoryPagingSource @Inject constructor(
             LoadResult.Page(
                 data = listStories,
                 prevKey = if (page == INITIAL_PAGE_INDEX) null else page - 1,
-                nextKey = if (listStories.isNullOrEmpty()) null else page + 1
+                nextKey = if (listStories.isEmpty()) null else page + 1
             )
         } catch (exception: Exception) {
             return LoadResult.Error(exception)

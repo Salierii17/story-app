@@ -38,9 +38,9 @@ class StoryRepository @Inject constructor(
         }).flow
     }
 
-    fun invalidatePagingSource() {
-        currentPagingSource?.invalidate()
-    }
+        fun invalidatePagingSource() {
+            currentPagingSource?.invalidate()
+        }
 
     fun fetchDetailStory(id: String): Flow<Result<ListStoryItem>> = flow {
         emit(Result.Loading)

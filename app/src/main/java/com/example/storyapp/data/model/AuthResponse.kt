@@ -11,7 +11,6 @@ data class RegisterResponse(
     val message: String
 )
 
-
 data class LoginResponse(
 
     @field:SerializedName("loginResult")
