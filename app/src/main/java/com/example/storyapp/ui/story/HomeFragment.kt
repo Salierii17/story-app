@@ -18,7 +18,6 @@ import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.databinding.FragmentHomeBinding
 import com.example.storyapp.ui.LoadingStateAdapter
 import com.example.storyapp.ui.StoryAdapter
-import com.example.storyapp.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -45,6 +44,8 @@ class HomeFragment : Fragment() {
 
         setupRecyclerView()
         setupObservers()
+
+        storyAdapter.retry()
     }
 
 
@@ -80,14 +81,6 @@ class HomeFragment : Fragment() {
                 storyAdapter.submitData(pagingData)
             }
         }
-        lifecycleScope.launch {
-            storyViewModel.addStory.collectLatest { result ->
-                if (result is Result.Success) {
-                    storyAdapter.refresh()
-                }
-            }
-        }
-
     }
 
 

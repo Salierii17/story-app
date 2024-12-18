@@ -25,6 +25,7 @@ class StoryViewModel @Inject constructor(
     private val repository: StoryRepository,
 ) : ViewModel() {
 
+    val stories: Flow<PagingData<ListStoryItem>> = repository.getStory().cachedIn(viewModelScope)
 
     private val _addStory = MutableStateFlow<Result<StoryResponse>>(Result.Initial)
     val addStory = _addStory.asStateFlow()
@@ -35,7 +36,6 @@ class StoryViewModel @Inject constructor(
     private val _imageUri = MutableLiveData<Uri?>()
     val imageUri: LiveData<Uri?> = _imageUri
 
-    val stories: Flow<PagingData<ListStoryItem>> = repository.getStory().cachedIn(viewModelScope)
 
 
     fun addStory(file: File, description: String) {

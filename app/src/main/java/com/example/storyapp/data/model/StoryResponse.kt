@@ -29,12 +29,8 @@ data class StoryDetailResponse(
 
 
 data class ListStoryItem(
-
-    @field:SerializedName("photoUrl")
-    val photoUrl: String,
-
-    @field:SerializedName("createdAt")
-    val createdAt: String,
+    @field:SerializedName("id")
+    val id: String,
 
     @field:SerializedName("name")
     val name: String,
@@ -42,12 +38,15 @@ data class ListStoryItem(
     @field:SerializedName("description")
     val description: String,
 
-    @field:SerializedName("lon")
-    val lon: Any,
+    @field:SerializedName("photoUrl")
+    val photoUrl: String,
 
-    @field:SerializedName("id")
-    val id: String,
+    @field:SerializedName("createdAt")
+    val createdAt: String,
 
     @field:SerializedName("lat")
-    val lat: Any
+    val lat: Any,
+
+    @field:SerializedName("lon")
+    val lon: Any
 )
