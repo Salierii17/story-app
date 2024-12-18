@@ -3,8 +3,6 @@ package com.example.storyapp.ui.maps
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -49,7 +47,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
 
         setMapStyle()
         observeStoryMaps()
@@ -64,7 +61,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             MarkerOptions().position(dicodingSpace).title("Dicoding Space")
                 .snippet("Batik Kumeli No.50")
         )
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dicodingSpace, 15f))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dicodingSpace, 7F))
+
+        mMap.setOnCameraIdleListener {
+            val position = mMap.cameraPosition
+            Log.d(TAG, "Camera moved to: ${position.target}, Zoom: ${position.zoom}")
+        }
 
         mapsViewModel.getStoriesWithLocation()
     }
@@ -85,39 +87,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         showSnackBar("Error: ${result.error}")
                     }
                 }
-            }
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.maps_options, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.normal_type -> {
-                mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-                true
-            }
-
-            R.id.satellite_type -> {
-                mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
-                true
-            }
-
-            R.id.terrain_type -> {
-                mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
-                true
-            }
-
-            R.id.hybrid_type -> {
-                mMap.mapType = GoogleMap.MAP_TYPE_HYBRID
-                true
-            }
-
-            else -> {
-                super.onOptionsItemSelected(item)
             }
         }
     }
@@ -147,16 +116,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 boundsBuilder.include(position)
             }
         }
-
-        val bounds: LatLngBounds = boundsBuilder.build()
-        mMap.animateCamera(
-            CameraUpdateFactory.newLatLngBounds(
-                bounds,
-                resources.displayMetrics.widthPixels,
-                resources.displayMetrics.heightPixels,
-                300
-            )
-        )
     }
 
     private fun showLoading(isLoading: Boolean) {
