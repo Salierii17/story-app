@@ -24,4 +24,11 @@
     <string name="success_login">ログインに成功しました</string>
     <string name="invalid_email">有効なメールアドレスを入力してください（example@domain.com）</string>
     <string name="updating_language">更新中…</string>
+    <string name="title_maps">マップ</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Terrain</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="hybrid_type">Hybrid</string>
+    <string name="retry">リトライ</string>
 </resources>

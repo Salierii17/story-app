@@ -1,18 +1,19 @@
-package com.example.storyapp
+package com.example.storyapp.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.storyapp.R
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.databinding.ItemStoryBinding
 
 class StoryAdapter(
     private val onClick: (ListStoryItem) -> Unit
-) : ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
+) : PagingDataAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
         val view = ItemStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,7 +22,7 @@ class StoryAdapter(
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = getItem(position)
-        holder.bind(story)
+        story?.let { holder.bind(it) }
     }
 
     class StoryViewHolder(
@@ -43,7 +44,7 @@ class StoryAdapter(
             override fun areItemsTheSame(
                 oldItem: ListStoryItem, newItem: ListStoryItem
             ): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id
             }
 
             @SuppressLint("DiffUtilEquals")

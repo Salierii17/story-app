@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.preference)
+    implementation(libs.androidx.room.common)
     testImplementation(libs.junit)
     implementation(libs.androidx.fragment.ktx)
 
@@ -66,6 +67,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.paging.runtime.ktx)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.androidx.datastore.preferences)
@@ -75,6 +77,11 @@ dependencies {
     // Retrofit for API calls
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+
+    // Local Database
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.room.compiler)
+    implementation(libs.androidx.room.paging)
 
     // OkHttp for HTTP client
     implementation(libs.okhttp)
@@ -101,5 +108,14 @@ dependencies {
     // Google Maps
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
+
+    // Testing
+    androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.turbine)
 
 }

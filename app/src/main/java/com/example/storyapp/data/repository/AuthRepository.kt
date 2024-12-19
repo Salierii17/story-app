@@ -1,8 +1,8 @@
 package com.example.storyapp.data.repository
 
 import android.util.Log
-import com.example.storyapp.data.datastore.UserSessionManager
 import com.example.storyapp.data.api.ApiService
+import com.example.storyapp.data.datastore.TokenManager
 import com.example.storyapp.data.model.ErrorResponse
 import com.example.storyapp.data.model.LoggedInUser
 import com.example.storyapp.utils.Result
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
     private val apiService: ApiService,
-    private val userSessionManager: UserSessionManager
+    private val tokenManager: TokenManager
 ) {
 
     fun register(
@@ -40,7 +40,9 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    fun login(email: String, password: String): Flow<Result<LoggedInUser>> = flow {
+    fun login(
+        email: String, password: String
+    ): Flow<Result<LoggedInUser>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.login(email, password).loginResult
@@ -49,7 +51,8 @@ class AuthRepository @Inject constructor(
                 name = response?.name.toString(),
                 token = response?.token.toString()
             )
-            userSessionManager.saveUser(user)
+            tokenManager.saveToken(user.token)
+
             emit(Result.Success(user))
         } catch (e: IOException) {
             emit(Result.Error("No Internet Connection"))
@@ -60,14 +63,13 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun saveUser(loggedInUser: LoggedInUser) = userSessionManager.saveUser(loggedInUser)
+    val isUserLoggedIn: Flow<Boolean> = flow {
+        emit(!tokenManager.getToken().isNullOrEmpty())
+    }
 
-    suspend fun logout() = userSessionManager.logout()
-
+    suspend fun logout() = tokenManager.clearToken()
 
     companion object {
         const val TAG = "AuthRepository"
     }
-
-
 }

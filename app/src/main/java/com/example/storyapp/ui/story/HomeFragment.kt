@@ -6,19 +6,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
-import com.example.storyapp.StoryAdapter
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.databinding.FragmentHomeBinding
-import com.example.storyapp.ui.auth.AuthViewModel
-import com.example.storyapp.utils.Result
+import com.example.storyapp.ui.LoadingStateAdapter
+import com.example.storyapp.ui.StoryAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -29,7 +28,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val authViewModel: AuthViewModel by viewModels()
     private val storyViewModel: StoryViewModel by viewModels()
     private lateinit var storyAdapter: StoryAdapter
 
@@ -37,7 +35,6 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -47,49 +44,41 @@ class HomeFragment : Fragment() {
         setupRecyclerView()
         setupObservers()
 
-        storyViewModel.fetchStory()
-
     }
 
-
     private fun setupRecyclerView() {
-        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            binding.rvAllStories.layoutManager = GridLayoutManager(requireContext(), 2)
-        } else {
-            binding.rvAllStories.layoutManager = LinearLayoutManager(requireContext())
-        }
         storyAdapter = StoryAdapter { storyItem ->
             navigateToStoryDetail(storyItem)
         }
-        binding.rvAllStories.adapter = storyAdapter
+
+        val dynamicLayoutManager =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                GridLayoutManager(requireContext(), 2)
+            } else {
+                LinearLayoutManager(requireContext())
+            }
+
+        binding.rvAllStories.apply {
+            layoutManager = dynamicLayoutManager
+            adapter =
+                storyAdapter.withLoadStateFooter(footer = LoadingStateAdapter { storyAdapter.retry() })
+        }
+        storyAdapter.addLoadStateListener { loadState ->
+            val isEmpty =
+                loadState.source.refresh is LoadState.NotLoading && storyAdapter.itemCount == 0
+
+            showPlaceholder(isEmpty)
+        }
+
     }
 
     private fun setupObservers() {
-        lifecycleScope.launch {
-
-            storyViewModel.stories.collectLatest { result ->
-                when (result) {
-                    is Result.Initial -> Unit
-                    is Result.Loading -> {
-                        showLoading(true)
-                        showPlaceholder(false)
-                    }
-
-                    is Result.Success -> {
-                        showLoading(false)
-                        showPlaceholder(false)
-                        val storyData = result.data
-                        Log.d("HomeFragment", "Fetched stories: $storyData")
-                        storyAdapter.submitList(storyData)
-                        showToast(getString(R.string.list_fetch_success))
-                    }
-
-                    is Result.Error -> {
-                        showLoading(false)
-                        showPlaceholder(true)
-                        showToast(result.error)
-                    }
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            showLoading(true)
+            storyViewModel.stories.collectLatest { pagingData ->
+                showLoading(false)
+                Log.d("HomeFragment", "PagingData received: $pagingData")
+                storyAdapter.submitData(pagingData)
             }
         }
     }
@@ -108,11 +97,6 @@ class HomeFragment : Fragment() {
     private fun showPlaceholder(isEmpty: Boolean) {
         binding.placeholder.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
-
-    private fun showToast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -30,7 +30,6 @@ class AddStoryFragment : Fragment() {
 
     private val storyViewModel: StoryViewModel by viewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -52,22 +51,23 @@ class AddStoryFragment : Fragment() {
 
         binding.buttonChoosePicture.setOnClickListener { startGallery() }
         binding.buttonAdd.setOnClickListener { submitStory() }
-
     }
 
     private fun setupObservers() {
         lifecycleScope.launch {
             storyViewModel.addStory.collectLatest { result ->
                 when (result) {
-                    is Result.Initial -> Unit
+                    is Result.Initial -> Log.d("AddStoryFragment", "State: Initial")
                     is Result.Loading -> showLoading(true)
                     is Result.Success -> {
                         showLoading(false)
                         showToast(result.data.message)
-                        findNavController().navigate(R.id.action_navigation_add_story_to_navigation_home)
+                        storyViewModel.refreshPagingData()
+                        navigateToHome()
                     }
 
                     is Result.Error -> {
+                        Log.d("AddStoryFragment", "State: Error - ${result.error}")
                         showLoading(false)
                         showToast(result.error)
                     }
@@ -76,9 +76,6 @@ class AddStoryFragment : Fragment() {
         }
     }
 
-    private fun startGallery() {
-        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    }
 
     private val launcherGallery = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -88,6 +85,10 @@ class AddStoryFragment : Fragment() {
         } else {
             Log.d("Photo Picker", "No media selected")
         }
+    }
+
+    private fun startGallery() {
+        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
     private fun showImage(uri: Uri) {
@@ -103,6 +104,11 @@ class AddStoryFragment : Fragment() {
         } ?: showToast(getString(R.string.empty_image_warning))
     }
 
+
+    private fun navigateToHome() {
+        findNavController().navigate(R.id.action_navigation_add_story_to_navigation_home)
+    }
+
     private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
@@ -115,5 +121,4 @@ class AddStoryFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

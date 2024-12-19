@@ -43,12 +43,10 @@ class DetailFragment : Fragment() {
         }
 
         setupObservers()
-
     }
 
     private fun setupObservers() {
         lifecycleScope.launch {
-
             storyViewModel.storyDetail.collectLatest { result ->
                 when (result) {
                     is Result.Initial -> Unit
@@ -74,7 +72,6 @@ class DetailFragment : Fragment() {
     }
 
     private fun setStoryDetailData(storyData: ListStoryItem) {
-
         Glide.with(this).load(storyData.photoUrl).placeholder(R.drawable.ic_loading)
             .error(R.drawable.ic_broken_image).into(binding.ivDetailPhoto)
 
@@ -95,5 +92,4 @@ class DetailFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

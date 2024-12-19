@@ -24,4 +24,11 @@
     <string name="success_login">"Login Berhasil "</string>
     <string name="invalid_email">Silakan masukkan alamat email yang valid (example@domain.com)</string>
     <string name="updating_language">Memperbarui …</string>
+    <string name="title_maps">Peta</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satelit</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="hybrid_type">Hybrid</string>
+    <string name="retry">Coba lagi</string>
 </resources>

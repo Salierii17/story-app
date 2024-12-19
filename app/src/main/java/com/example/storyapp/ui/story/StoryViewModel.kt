@@ -1,10 +1,13 @@
 package com.example.storyapp.ui.story
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.data.model.StoryResponse
 import com.example.storyapp.data.repository.StoryRepository
@@ -22,7 +25,7 @@ class StoryViewModel @Inject constructor(
     private val repository: StoryRepository,
 ) : ViewModel() {
 
-    private val _stories = MutableStateFlow<Result<List<ListStoryItem>>>(Result.Initial)
+    private val _stories = MutableStateFlow<PagingData<ListStoryItem>>(PagingData.empty())
     val stories = _stories.asStateFlow()
 
     private val _addStory = MutableStateFlow<Result<StoryResponse>>(Result.Initial)
@@ -34,26 +37,37 @@ class StoryViewModel @Inject constructor(
     private val _imageUri = MutableLiveData<Uri?>()
     val imageUri: LiveData<Uri?> = _imageUri
 
+    private val refreshTrigger = MutableStateFlow(Unit)
 
-    fun fetchStory() {
+
+
+    init {
+        fetchStory()
+    }
+
+    private fun fetchStory() {
         viewModelScope.launch {
-            repository.fetchStory().collectLatest { result ->
-                _stories.value = result
-            }
+            repository.getStory()
+                .cachedIn(viewModelScope)
+                .collect { pagingData ->
+                    _stories.value = pagingData
+                }
         }
     }
 
     fun addStory(file: File, description: String) {
         viewModelScope.launch {
             repository.addStory(file, description).collectLatest { result ->
+                Log.d("StoryViewModel", "StateFlow emitting result: $result")
                 _addStory.value = result
+                refreshTrigger.value = Unit
             }
         }
     }
 
     fun fetchDetailStory(id: String) {
         viewModelScope.launch {
-            repository.fetchDetailStory(id).collectLatest { result ->
+            repository.getDetailStory(id).collectLatest { result ->
                 _storyDetail.value = result
             }
         }
@@ -63,4 +77,7 @@ class StoryViewModel @Inject constructor(
         _imageUri.value = uri
     }
 
+    fun refreshPagingData() {
+        refreshTrigger.value = Unit
+    }
 }

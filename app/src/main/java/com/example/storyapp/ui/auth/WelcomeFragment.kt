@@ -20,7 +20,6 @@ class WelcomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentWelcomeBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -28,22 +27,26 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.signupButton.setOnClickListener {
-            val extras = FragmentNavigatorExtras(
-                binding.titleTextView to "title"
-            )
-            findNavController().navigate(
-                R.id.action_navigation_welcome_to_navigation_registration, null, null, extras
-            )
-        }
-        binding.loginButton.setOnClickListener {
-            val extras = FragmentNavigatorExtras(
-                binding.titleTextView to "title"
-            )
-            findNavController().navigate(
-                R.id.action_navigation_welcome_to_navigation_login, null, null, extras
-            )
-        }
+        binding.signupButton.setOnClickListener { navigateToRegistration() }
+        binding.loginButton.setOnClickListener { navigateToLogin() }
+    }
+
+    private fun navigateToRegistration() {
+        val extras = FragmentNavigatorExtras(
+            binding.titleTextView to "title"
+        )
+        findNavController().navigate(
+            R.id.action_navigation_welcome_to_navigation_registration, null, null, extras
+        )
+    }
+
+    private fun navigateToLogin() {
+        val extras = FragmentNavigatorExtras(
+            binding.titleTextView to "title"
+        )
+        findNavController().navigate(
+            R.id.action_navigation_welcome_to_navigation_login, null, null, extras
+        )
     }
 
     override fun onDestroyView() {

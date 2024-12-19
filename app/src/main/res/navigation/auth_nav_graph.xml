@@ -22,7 +22,11 @@
         android:id="@+id/navigation_registration"
         android:name="com.example.storyapp.ui.auth.RegisterFragment"
         android:label="@string/title_registration"
-        tools:layout="@layout/fragment_register" />
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_navigation_registration_to_navigation_welcome"
+            app:destination="@id/navigation_welcome" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_login"
         android:name="com.example.storyapp.ui.auth.LoginFragment"

@@ -14,5 +14,4 @@ class LanguageRepository @Inject constructor(
     suspend fun saveLanguage(languageCode: String) {
         userPreferences.saveLanguage(languageCode)
     }
-
 }
