@@ -2,6 +2,7 @@ package com.example.storyapp.ui.story
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +36,6 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -47,41 +47,38 @@ class HomeFragment : Fragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        storyViewModel.refreshPagingData()
-    }
-
     private fun setupRecyclerView() {
-        val layoutManager =
+        storyAdapter = StoryAdapter { storyItem ->
+            navigateToStoryDetail(storyItem)
+        }
+
+        val dynamicLayoutManager =
             if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 GridLayoutManager(requireContext(), 2)
             } else {
                 LinearLayoutManager(requireContext())
             }
 
-        binding.rvAllStories.layoutManager = layoutManager
-        storyAdapter = StoryAdapter { storyItem ->
-            navigateToStoryDetail(storyItem)
+        binding.rvAllStories.apply {
+            layoutManager = dynamicLayoutManager
+            adapter =
+                storyAdapter.withLoadStateFooter(footer = LoadingStateAdapter { storyAdapter.retry() })
         }
         storyAdapter.addLoadStateListener { loadState ->
-            val isLoading = loadState.source.refresh is LoadState.Loading
             val isEmpty =
                 loadState.source.refresh is LoadState.NotLoading && storyAdapter.itemCount == 0
 
-            showLoading(isLoading)
             showPlaceholder(isEmpty)
         }
 
-        binding.rvAllStories.adapter = storyAdapter.withLoadStateFooter(
-            footer = LoadingStateAdapter { storyAdapter.retry() }
-
-        )
     }
 
     private fun setupObservers() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
+            showLoading(true)
             storyViewModel.stories.collectLatest { pagingData ->
+                showLoading(false)
+                Log.d("HomeFragment", "PagingData received: $pagingData")
                 storyAdapter.submitData(pagingData)
             }
         }

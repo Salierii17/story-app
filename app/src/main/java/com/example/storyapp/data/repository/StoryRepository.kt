@@ -1,11 +1,13 @@
 package com.example.storyapp.data.repository
 
 import android.util.Log
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.storyapp.data.StoryPagingSource
+import com.example.storyapp.data.StoryRemoteMediator
 import com.example.storyapp.data.api.ApiService
+import com.example.storyapp.data.database.StoryDatabase
 import com.example.storyapp.data.model.ErrorResponse
 import com.example.storyapp.data.model.ListStoryItem
 import com.example.storyapp.utils.Result
@@ -23,14 +25,18 @@ import javax.inject.Inject
 
 class StoryRepository @Inject constructor(
     private val apiService: ApiService,
+    private val database: StoryDatabase
 ) {
 
+    @OptIn(ExperimentalPagingApi::class)
     fun getStory(): Flow<PagingData<ListStoryItem>> {
-        return Pager(config = PagingConfig(
-            pageSize = 5, enablePlaceholders = false
-        ), pagingSourceFactory = {
-            StoryPagingSource(apiService)
-        }).flow
+        val pagingSourceFactory = { database.storyDao().getAllStory() }
+
+        return Pager(
+            config = PagingConfig(pageSize = 5),
+            remoteMediator = StoryRemoteMediator(apiService, database),
+            pagingSourceFactory = pagingSourceFactory
+        ).flow
     }
 
     fun addStory(imageFile: File, description: String) = flow {

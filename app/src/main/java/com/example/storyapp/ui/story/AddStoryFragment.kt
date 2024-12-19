@@ -56,16 +56,10 @@ class AddStoryFragment : Fragment() {
     private fun setupObservers() {
         lifecycleScope.launch {
             storyViewModel.addStory.collectLatest { result ->
-                Log.d("AddStoryFragment", "Observer received result: $result")
                 when (result) {
                     is Result.Initial -> Log.d("AddStoryFragment", "State: Initial")
-                    is Result.Loading -> {
-                        Log.d("AddStoryFragment", "State: Loading")
-                        showLoading(true)
-                    }
-
+                    is Result.Loading -> showLoading(true)
                     is Result.Success -> {
-                        Log.d("AddStoryFragment", "State: Success - ${result.data.message}")
                         showLoading(false)
                         showToast(result.data.message)
                         storyViewModel.refreshPagingData()
@@ -87,7 +81,6 @@ class AddStoryFragment : Fragment() {
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
-            Log.d("AddStoryFragment", "Image selected: $uri")
             storyViewModel.setImageUri(uri)
         } else {
             Log.d("Photo Picker", "No media selected")
@@ -104,12 +97,9 @@ class AddStoryFragment : Fragment() {
 
     private fun submitStory() {
         storyViewModel.imageUri.value?.let { uri ->
-            Log.d("AddStoryFragment", "Submitting story with imageUri: $uri")
             val imageFile = uriToFile(uri, requireContext()).reduceFileImage()
-            Log.d("AddStoryFragment", "Reduced image file: ${imageFile.path}")
-//            Log.d("Image File", "showImage: ${imageFile.path}")
+            Log.d("Image File", "showImage: ${imageFile.path}")
             val description = binding.edAddDescription.text.toString()
-            Log.d("AddStoryFragment", "Description entered: $description")
             storyViewModel.addStory(imageFile, description)
         } ?: showToast(getString(R.string.empty_image_warning))
     }

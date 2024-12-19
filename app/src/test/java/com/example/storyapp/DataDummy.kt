@@ -12,8 +12,8 @@ object DataDummy {
                 "story $i",
                 "https://story.com/photo.jpg",
                 "2024-12-18",
-                30,
-                30,
+                30.0,
+                30.0,
             )
             items.add(story)
         }

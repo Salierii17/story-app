@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.preference)
+    implementation(libs.androidx.room.common)
     testImplementation(libs.junit)
     implementation(libs.androidx.fragment.ktx)
 
@@ -76,6 +77,11 @@ dependencies {
     // Retrofit for API calls
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+
+    // Local Database
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.room.compiler)
+    implementation(libs.androidx.room.paging)
 
     // OkHttp for HTTP client
     implementation(libs.okhttp)

@@ -44,7 +44,7 @@ class StoryAdapter(
             override fun areItemsTheSame(
                 oldItem: ListStoryItem, newItem: ListStoryItem
             ): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id
             }
 
             @SuppressLint("DiffUtilEquals")
