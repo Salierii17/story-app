@@ -11,7 +11,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
+import com.example.storyapp.R
 import com.example.storyapp.databinding.FragmentRegisterBinding
 import com.example.storyapp.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
@@ -101,7 +103,7 @@ class RegisterFragment : Fragment() {
                         showLoading(false)
                         val message = result.data
                         showToast("Success: $message")
-
+                        navigateToWelcomingFragment()
                     }
 
                     is Result.Error -> {
@@ -111,6 +113,10 @@ class RegisterFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun navigateToWelcomingFragment() {
+        findNavController().navigate(R.id.action_navigation_registration_to_navigation_welcome)
     }
 
     private fun registerUser() {
